@@ -4,6 +4,7 @@ import biz.meetmatch.decorators.{WithCalcLogging, WithSparkSession}
 import biz.meetmatch.modules.Module
 import biz.meetmatch.util.Utils
 import org.apache.spark.sql.SparkSession
+import org.rogach.scallop.Scallop
 import org.slf4j.{Logger, LoggerFactory}
 
 trait WorkflowBase {
@@ -15,19 +16,19 @@ trait WorkflowBase {
 
     WithSparkSession(this.getClass) { implicit sparkSession =>
       WithCalcLogging(this.getClass, scallopts, sparkSession) {
-        getModules.foreach(executeModule(_, args))
+        getModules.foreach(executeModule(_, Utils.getFiltersFromCLI(args)))
       }
     }
   }
 
-  def executeModule(module: Module, args: Array[String])(implicit sparkSession: SparkSession): Unit = {
+  def executeModule(module: Module, scallopts: Scallop)(implicit sparkSession: SparkSession): Unit = {
     logger.info("====================================================")
     logger.info("MODULE " + module.getClass.getSimpleName)
     logger.info("====================================================")
     WithCalcLogging(module.getClass) {
       sparkSession.sparkContext.setJobGroup(module.getClass.getName, this.getClass.getName)
       module match {
-        case mod: Module => module.execute(args)
+        case mod: Module => module.execute(scallopts)
       }
       sparkSession.sparkContext.clearJobGroup
     }

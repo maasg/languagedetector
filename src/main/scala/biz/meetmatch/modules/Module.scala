@@ -7,6 +7,7 @@ import biz.meetmatch.logging.BusinessLogger
 import biz.meetmatch.util.Utils
 import org.apache.spark.sql.functions.max
 import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
+import org.rogach.scallop.Scallop
 import org.slf4j.{Logger, LoggerFactory}
 
 trait Module {
@@ -18,12 +19,12 @@ trait Module {
 
     WithSparkSession(this.getClass) { implicit sparkSession =>
       WithCalcLogging(this.getClass, scallopts, sparkSession) {
-        execute(args)
+        execute(scallopts)
       }
     }
   }
 
-  def execute(args: Array[String])(implicit sparkSession: SparkSession): Unit
+  def execute(scallopts: Scallop)(implicit sparkSession: SparkSession): Unit
 }
 
 abstract class StreamingModule(sparkPort: Int) {

@@ -15,14 +15,12 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
   override def main(args: Array[String]): Unit = {
     WithCalcLogging(this.getClass) {
       WithSparkSession(this.getClass) { implicit sparkSession =>
-        execute(args)
+        execute(Utils.getFiltersFromCLI(args))
       }
     }
   }
 
-  override def execute(args: Array[String])(implicit sparkSession: SparkSession): Unit = {
-    val scallopts = Scallop(args).opt[String]("file", 'f')
-
+  override def execute(scallopts: Scallop)(implicit sparkSession: SparkSession): Unit = {
     val inputFile = scallopts.get[String]("file").getOrElse(Utils.getConfig("languagedetector.inputFile"))
 
     val textDS = loadInputTextFromFile(inputFile)
@@ -55,7 +53,7 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
   }
 
   def loadInputTextFromFile(path: String)(implicit sparkSession: SparkSession): Dataset[(String, String)] = {
-    Utils.loadWholeTextFile(path)
+    Utils.loadWholeTextFileAbs(path)
   }
 
   def loadResultsFromParquet(implicit sparkSession: SparkSession): Dataset[Sentence] = {

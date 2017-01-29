@@ -3,13 +3,14 @@ package biz.meetmatch.modules
 import biz.meetmatch.util.Utils
 import com.google.gson.Gson
 import org.apache.spark.sql.SparkSession
+import org.rogach.scallop.Scallop
 import org.slf4j.LoggerFactory
 
 import scalaj.http.Http
 
 object WarmupZeppelin extends Module {
 
-  override def execute(args: Array[String])(implicit sparkSession: SparkSession): Unit = {
+  override def execute(scallopts: Scallop)(implicit sparkSession: SparkSession): Unit = {
     val interpreterId = Utils.getConfig("zeppelin.interpreter.id")
 
     logger.info(s"Restarting the spark interpreter using url http://localhost:8080/api/interpreter/setting/restart/$interpreterId...")

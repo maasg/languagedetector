@@ -21,7 +21,8 @@ object Utils {
 
   def getFiltersFromCLI(args: Array[String]): Scallop = {
     Scallop(args)
-      .opt[String]("message", 'm')
+      .opt[String]("message", 'm', required = false, default = () => Some("no message"))
+      .opt[String]("file", 'f', required = false)
       .verify
   }
 
@@ -101,6 +102,11 @@ object Utils {
   def loadTextFile(path: String)(implicit sparkSession: SparkSession): Dataset[String] = {
     import sparkSession.implicits._
     sparkSession.sparkContext.textFile(s"$getTextFileRoot/$path").toDS
+  }
+
+  def loadWholeTextFileAbs(path: String)(implicit sparkSession: SparkSession): Dataset[(String, String)] = {
+    import sparkSession.implicits._
+    sparkSession.sparkContext.wholeTextFiles(path).toDS
   }
 
   def loadWholeTextFile(path: String)(implicit sparkSession: SparkSession): Dataset[(String, String)] = {
