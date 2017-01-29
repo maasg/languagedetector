@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-. $(dirname $0)/env.sh
+. $(dirname $0)/../env.sh
 
 CLASS=$1
 DATE=$(date +"%Y%m%d%H%M")
@@ -9,8 +9,6 @@ LOGFILE=log_${CLASS}_${DATE}.log
 LOGFILELATEST=log_${CLASS}_latest.log
 BUSLOGFILE=businessLog_dummy.log
 shift;
-
-$(dirname $0)/build_assembly.sh
 
 ENV=test
 APP_CONFIG=${APP_DIR}/conf/${ENV}.conf

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-. $(dirname $0)/env.sh
+. $(dirname $0)/../env.sh
 
 #if grep -Fxq "val build = \"need new build\"" $SOURCE_DIR/build.sbt
 #then

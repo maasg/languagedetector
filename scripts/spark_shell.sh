@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-. $(dirname $0)/env.sh
-
-$(dirname $0)/build_assembly.sh
+. $(dirname $0)/../env.sh
 
 ENV=test
 APP_CONFIG=${APP_DIR}/conf/${ENV}.conf

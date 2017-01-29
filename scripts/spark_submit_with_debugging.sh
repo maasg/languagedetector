@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-. $(dirname $0)/env.sh
+. $(dirname $0)/../env.sh
 
 CLASS=$1
 DATE=$(date +"%Y%m%d%H%M")
 BUSLOGFILE=businessLog_${DATE}.log
 shift;
-
-$(dirname $0)/build_assembly.sh
 
 ENV=test
 APP_CONFIG=/root/cruncher/${ENV}.conf
