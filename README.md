@@ -1,5 +1,5 @@
 # languagedetector
-Ths language detector repo can detect the language of a text, sentence by sentence
+This language detector repo can detect the language of a text, sentence by sentence
 
 ## quick start
 ### installation and configuration
