@@ -15,19 +15,19 @@ trait WorkflowBase {
 
     WithSparkSession(this.getClass) { implicit sparkSession =>
       WithCalcLogging(this.getClass, scallopts, sparkSession) {
-        getModules.foreach(executeModule)
+        getModules.foreach(executeModule(_, args))
       }
     }
   }
 
-  def executeModule(module: Module)(implicit sparkSession: SparkSession): Unit = {
+  def executeModule(module: Module, args: Array[String])(implicit sparkSession: SparkSession): Unit = {
     logger.info("====================================================")
     logger.info("MODULE " + module.getClass.getSimpleName)
     logger.info("====================================================")
     WithCalcLogging(module.getClass) {
       sparkSession.sparkContext.setJobGroup(module.getClass.getName, this.getClass.getName)
       module match {
-        case mod: Module => module.execute
+        case mod: Module => module.execute(args)
       }
       sparkSession.sparkContext.clearJobGroup
     }

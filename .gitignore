@@ -41,3 +41,4 @@ project/plugins/project/
 
 /src/main/resources/dev.conf
 /src/main/resources/local.conf
+/metastore_db/

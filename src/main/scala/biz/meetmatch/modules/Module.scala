@@ -18,12 +18,12 @@ trait Module {
 
     WithSparkSession(this.getClass) { implicit sparkSession =>
       WithCalcLogging(this.getClass, scallopts, sparkSession) {
-        execute
+        execute(args)
       }
     }
   }
 
-  def execute(implicit sparkSession: SparkSession): Unit
+  def execute(args: Array[String])(implicit sparkSession: SparkSession): Unit
 }
 
 abstract class StreamingModule(sparkPort: Int) {

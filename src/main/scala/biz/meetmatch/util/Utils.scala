@@ -8,7 +8,6 @@ import java.util.{Calendar, Date}
 import biz.meetmatch.logging.BusinessSparkListener
 import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.commons.io.FileUtils
-import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql._
 import org.apache.spark.streaming.{Seconds, StreamingContext}
@@ -50,18 +49,18 @@ object Utils {
       .config("spark.ui.port", sparkPort)
       .getOrCreate()
 
-    if(!streaming)
+    if (!streaming)
       sparkSession.sparkContext.addSparkListener(new BusinessSparkListener)
 
     sparkSession
   }
 
-  def createSparkStreamingSession(implicit sparkSession: SparkSession): StreamingContext ={
+  def createSparkStreamingSession(implicit sparkSession: SparkSession): StreamingContext = {
     new StreamingContext(sparkSession.sparkContext, Seconds(1))
   }
 
   def getParquetRoot: String = {
-    s"${Utils.getConfig("spark.content.home")}/parquet"
+    s"${Utils.getConfig("spark.content")}/parquet"
   }
 
   def loadParquetFile(path: String, setJobDescription: Boolean = true)(implicit sparkSession: SparkSession): DataFrame = {
@@ -89,7 +88,7 @@ object Utils {
   }
 
   def getTextFileRoot: String = {
-    s"${Utils.getConfig("spark.content.home")}/text"
+    s"${Utils.getConfig("spark.content")}/text"
   }
 
   def saveAsTextFile[T](rdd: RDD[String], path: String): Unit = {
@@ -102,6 +101,11 @@ object Utils {
   def loadTextFile(path: String)(implicit sparkSession: SparkSession): Dataset[String] = {
     import sparkSession.implicits._
     sparkSession.sparkContext.textFile(s"$getTextFileRoot/$path").toDS
+  }
+
+  def loadWholeTextFile(path: String)(implicit sparkSession: SparkSession): Dataset[(String, String)] = {
+    import sparkSession.implicits._
+    sparkSession.sparkContext.wholeTextFiles(s"$getTextFileRoot/$path").toDS
   }
 
   def changeNumPartitionsOfParquetFile(path: String, numPartitions: Int)(implicit sparkSession: SparkSession): Boolean = {
