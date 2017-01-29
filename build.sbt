@@ -28,6 +28,12 @@ libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0" classif
 // language detection
 libraryDependencies += "com.optimaize.languagedetector" % "language-detector" % "0.6"
 
+// https://mvnrepository.com/artifact/com.google.code.gson/gson
+libraryDependencies += "com.google.code.gson" % "gson" % "1.7.1"
+
+// http client
+libraryDependencies += "org.scalaj" %% "scalaj-http" % "2.3.0"
+
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 
 javaOptions in Test += "-Dconfig.resource=test.conf"
