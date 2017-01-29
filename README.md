@@ -33,5 +33,5 @@ scripts/spark_submit.sh modules.DetectLanguage --file /path/to/file # the spark 
 
 # view the results
 scripts/spark_shell.sh # note: ignore the java.io.FileNotFoundException
-scala> Utils.loadParquetFile("Sentences").collect # will return the detected language of each sentence
+scala> DetectLanguage.loadResultsFromParquet.collect # will return the detected language of each sentence
 ```
