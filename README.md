@@ -4,14 +4,17 @@ This language detector repo can detect the language of a text, sentence by sente
 ## quick start
 ### installation and configuration
 1] install Spark 2.1.0 from http://spark.apache.org/downloads.html (you can use a different version if you also modify the sparkVersion accordingly in the [build.sbt](https://github.com/tolomaus/languagedetector/tree/master/build.sbt)) 
+
 2] clone this repo
 ```shell
 git clone https://github.com/tolomaus/languagedetector.git
 ```
+
 3] (optional) modify the environment variables from [env.sh](https://github.com/tolomaus/languagedetector/tree/master/env.sh)
 ```shell
 nano env.sh
 ```
+
 4] copy (and if necessary modify) the environment specific test.conf file:
 ```shell
 . env.sh
