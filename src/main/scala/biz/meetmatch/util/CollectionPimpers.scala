@@ -1,9 +1,4 @@
-package biz.meetmatch.modules
-
-import java.sql.Timestamp
-
-import biz.meetmatch.pos.Tag
-import org.apache.spark.sql.Dataset
+package biz.meetmatch.util
 
 import scala.collection.parallel.ParIterable
 

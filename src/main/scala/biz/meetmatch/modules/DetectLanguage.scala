@@ -1,6 +1,7 @@
 package biz.meetmatch.modules
 
 import biz.meetmatch.decorators.{WithCalcLogging, WithSparkSession}
+import biz.meetmatch.model.Sentence
 import biz.meetmatch.pos.{LanguageDetector, SentenceExtractor}
 import biz.meetmatch.util.Utils
 import org.apache.spark.sql.{Dataset, SparkSession}
@@ -66,4 +67,3 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
   }
 }
 
-case class Sentence(content: String, language: String)

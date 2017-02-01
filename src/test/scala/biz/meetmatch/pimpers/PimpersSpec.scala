@@ -1,7 +1,7 @@
 package biz.meetmatch.pimpers
 
 import biz.meetmatch.UnitSpec
-import biz.meetmatch.modules.CollectionPimpers
+import biz.meetmatch.util.CollectionPimpers
 import org.slf4j.LoggerFactory
 
 class PimpersSpec extends UnitSpec {
