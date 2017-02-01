@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 SOURCE_DIR=~/src/languagedetector
 APP_DIR=~/apps/languagedetector
-CONTENT_DIR=~/data/languagedetector
 
 LOG_DIR=~/tmp/logs
 

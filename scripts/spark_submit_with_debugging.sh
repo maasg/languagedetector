@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+ENV=test
+
 . $(dirname $0)/../env.sh
 
 CLASS=$1
@@ -8,7 +10,6 @@ DATE=$(date +"%Y%m%d%H%M")
 BUSLOGFILE=businessLog_${DATE}.log
 shift;
 
-ENV=test
 APP_CONFIG=/root/cruncher/${ENV}.conf
 
 touch ${LOG_DIR}/${BUSLOGFILE}

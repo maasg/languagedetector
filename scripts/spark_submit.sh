@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+ENV=test
+
 . $(dirname $0)/../env.sh
 
 CLASS=$1
@@ -9,7 +11,6 @@ LOGFILE=log_${DATE}.log
 BUSLOGFILE=businessLog_${DATE}.log
 shift;
 
-ENV=test
 APP_CONFIG=${APP_DIR}/conf/${ENV}.conf
 
 touch ${LOG_DIR}/${LOGFILE}
