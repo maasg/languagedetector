@@ -39,4 +39,4 @@ scala> CountSentencesByLanguage.loadResultsFromParquet.collect # will return an 
 ```
 
 In addition to the logs generated in the console you can also consult the language detector UI which gives you an easier digestible view of the logs, similar to this one:
-![alt text](https://github.com/tolomaus/languagedetector/tree/master/spark-logging.png "spark-logging")
+![alt text](https://github.com/tolomaus/languagedetector/blob/master/spark-logging.png "spark-logging")
