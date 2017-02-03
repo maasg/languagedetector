@@ -19,7 +19,8 @@ nano settings.sh
 4] copy (and if necessary modify) the environment specific test.conf file to your needs:
 ```shell
 . settings.sh
-cp src/main/resources/test.conf ${APP_DIR}/conf
+mkdir ${APP_DIR}/conf
+cp src/main/resources/test.conf ${APP_DIR}/conf/
 nano ${APP_DIR}/conf/test.conf
 ```
 
