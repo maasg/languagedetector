@@ -29,9 +29,10 @@ scripts/package_app_dependencies.sh # only run this when the dependencies have c
 scripts/package_app.sh
 
 # submit the spark app
-scripts/spark_submit.sh modules.DetectLanguage --file /path/to/file # the spark app is executed in the background but the logs are shown using a tail in the foreground so you can ctrl+c at any time without killing the spark app
+scripts/spark_submit.sh workflow.Workflow --file /path/to/file # the spark app is executed in the background but the logs are shown using a tail in the foreground so you can ctrl+c at any time without killing the spark app
 
 # view the results
 scripts/spark_shell.sh # note: ignore the java.io.FileNotFoundException
 scala> DetectLanguage.loadResultsFromParquet.collect # will return an array of Sentence(content: String, language: String)
+scala> CountSentencesByLanguage.loadResultsFromParquet.collect # will return an array of SentenceCountByLanguage(language: String, count: Long)
 ```
