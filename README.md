@@ -10,14 +10,14 @@ This repo contains an Apache Spark application that can detect the language of a
 git clone https://github.com/tolomaus/languagedetector.git
 ```
 
-3] (optional) modify the environment variables from [settings.env](https://github.com/tolomaus/languagedetector/tree/master/settings.env) to your needs
+3] (optional) modify the environment variables from [settings.sh](https://github.com/tolomaus/languagedetector/tree/master/settings.sh) to your needs
 ```shell
-nano settings.env
+nano settings.sh
 ```
 
 4] copy (and if necessary modify) the environment specific test.conf file to your needs:
 ```shell
-. settings.env
+. settings.sh
 cp src/main/resources/test.conf ${APP_DIR}/conf
 nano ${APP_DIR}/conf/test.conf
 ```

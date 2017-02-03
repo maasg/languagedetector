@@ -3,7 +3,7 @@ set -e
 
 ENV=test
 
-. $(dirname $0)/../settings.env
+. $(dirname $0)/../settings.sh
 
 CLASS=$1
 DATE=$(date +"%Y%m%d%H%M")

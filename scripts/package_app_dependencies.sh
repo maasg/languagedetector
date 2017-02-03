@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-. $(dirname $0)/../settings.env
+. $(dirname $0)/../settings.sh
 
 echo "Executing 'sbt assemblyPackageDependency'..."
 cd $SOURCE_DIR
