@@ -8,6 +8,7 @@ This repo contains an Apache Spark application that can detect the language of a
 2] clone this repo
 ```shell
 git clone https://github.com/tolomaus/languagedetector.git
+cd languagedetector
 ```
 
 3] (optional) modify the environment variables from [settings.sh](https://github.com/tolomaus/languagedetector/tree/master/settings.sh) to your needs
@@ -36,3 +37,6 @@ scripts/spark_shell.sh # note: ignore the java.io.FileNotFoundException
 scala> DetectLanguage.loadResultsFromParquet.collect # will return an array of Sentence(content: String, language: String)
 scala> CountSentencesByLanguage.loadResultsFromParquet.collect # will return an array of SentenceCountByLanguage(language: String, count: Long)
 ```
+
+In addition to the logs generated in the console you can also consult the language detector UI which gives you an easier digestible view of the logs, similar to this one:
+![alt text](https://github.com/tolomaus/languagedetector/tree/master/spark-logging.png "spark-logging")

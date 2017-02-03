@@ -21,7 +21,7 @@ object CountSentencesByLanguage extends Module with ParquetExtensions[SentenceCo
   }
 
   override def execute(scallopts: Scallop)(implicit sparkSession: SparkSession): Unit = {
-    val sentenceDS = DetectLanguage.loadResultsFromParquet
+    val sentenceDS = DetectLanguage.loadResultsFromParquet(this.getClass)
 
     val sentenceCountByLanguageDS = calc(sentenceDS)
 
@@ -38,7 +38,7 @@ object CountSentencesByLanguage extends Module with ParquetExtensions[SentenceCo
     import sparkSession.implicits._
     sparkSession.sparkContext.setJobGroup(this.getClass.getName, this.getClass.getName)
 
-    sparkSession.sparkContext.setJobDescription("Cont the sentences by language")
+    sparkSession.sparkContext.setJobDescription("Count the sentences by language")
     sentenceDS
       .groupByKey(_.language)
       .count
