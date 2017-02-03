@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SOURCE_DIR=~/src/languagedetector
+SOURCE_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 APP_DIR=~/apps/languagedetector
 
 LOG_DIR=~/tmp/logs

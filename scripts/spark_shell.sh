@@ -3,7 +3,7 @@ set -e
 
 ENV=test
 
-. $(dirname $0)/../env.sh
+. $(dirname $0)/../settings.env
 
 BUSLOGFILE=businessLog_dummy.log
 

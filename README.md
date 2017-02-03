@@ -1,23 +1,23 @@
 # languagedetector
-This language detector repo can detect the language of a text, sentence by sentence
+This repo contains an Apache Spark application that can detect the language of a text, sentence by sentence. See also [its companion repo](https://github.com/tolomaus/languagedetector.git) which contains a Play application that allows to detect the language of a text that is entered by the user.
 
 ## quick start
 ### installation and configuration
-1] install Spark 2.1.0 from http://spark.apache.org/downloads.html (you can use a different version if you also modify the sparkVersion accordingly in the [build.sbt](https://github.com/tolomaus/languagedetector/tree/master/build.sbt)) 
+1] install Apache Spark 2.1.0 from http://spark.apache.org/downloads.html (you can use a different version if you also modify the sparkVersion accordingly in the [build.sbt](https://github.com/tolomaus/languagedetector/tree/master/build.sbt)) 
 
 2] clone this repo
 ```shell
 git clone https://github.com/tolomaus/languagedetector.git
 ```
 
-3] (optional) modify the environment variables from [env.sh](https://github.com/tolomaus/languagedetector/tree/master/env.sh)
+3] (optional) modify the environment variables from [settings.env](https://github.com/tolomaus/languagedetector/tree/master/settings.env) to your needs
 ```shell
-nano env.sh
+nano settings.env
 ```
 
-4] copy (and if necessary modify) the environment specific test.conf file:
+4] copy (and if necessary modify) the environment specific test.conf file to your needs:
 ```shell
-. env.sh
+. settings.env
 cp src/main/resources/test.conf ${APP_DIR}/conf
 nano ${APP_DIR}/conf/test.conf
 ```
