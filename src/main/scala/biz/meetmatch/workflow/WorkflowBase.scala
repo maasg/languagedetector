@@ -9,13 +9,14 @@ import org.slf4j.{Logger, LoggerFactory}
 
 trait WorkflowBase {
   protected val logger: Logger = LoggerFactory.getLogger(this.getClass)
+  protected implicit val module: Class[_ <: WorkflowBase] = this.getClass
 
   def main(args: Array[String]): Unit = {
     val scallopts = Utils.getFiltersFromCLI(args)
     logger.info(scallopts.summary)
 
-    WithSparkSession(this.getClass) { implicit sparkSession =>
-      WithCalcLogging(this.getClass, scallopts, sparkSession) {
+    WithSparkSession() { implicit sparkSession =>
+      WithCalcLogging(scallopts, sparkSession) {
         getModules.foreach(executeModule(_, Utils.getFiltersFromCLI(args)))
       }
     }
@@ -25,7 +26,7 @@ trait WorkflowBase {
     logger.info("====================================================")
     logger.info("MODULE " + module.getClass.getSimpleName)
     logger.info("====================================================")
-    WithCalcLogging(module.getClass) {
+    WithCalcLogging(module.getClass.getName) {
       sparkSession.sparkContext.setJobGroup(module.getClass.getName, this.getClass.getName)
       module match {
         case mod: Module => module.execute(scallopts)

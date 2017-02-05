@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-class SentenceExtractor {
+class SentenceExtractor(implicit module: Class[_]) {
   private val logger = LoggerFactory.getLogger(this.getClass)
-  private val businessLogger = BusinessLogger.forModule(this.getClass)
+  private val businessLogger = new BusinessLogger(module.getName)
 
   private val props = new Properties()
   props.put("annotators", "tokenize, ssplit, pos, lemma")

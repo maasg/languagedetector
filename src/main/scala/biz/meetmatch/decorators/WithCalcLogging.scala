@@ -7,14 +7,18 @@ import org.rogach.scallop.Scallop
 import scala.util.{Failure, Success, Try}
 
 object WithCalcLogging {
-  def apply[B, U](clas: Class[U])(f: => B): B = apply(clas, None, None)(f)
+  def apply[B](f: => B)(implicit module: Class[_]): B = apply(module.getName)(f)
 
-  def apply[B, U](clas: Class[U], scallopts: Scallop)(f: => B): B = apply(clas, Some(scallopts), None)(f)
+  def apply[B](scallopts: Scallop, sparkSession: SparkSession)(f: => B)(implicit module: Class[_] = this.getClass): B = apply(module.getName, Some(scallopts), Some(sparkSession))(f)
 
-  def apply[B, U](clas: Class[U], scallopts: Scallop, sparkSession: SparkSession)(f: => B): B = apply(clas, Some(scallopts), Some(sparkSession))(f)
+  def apply[B](module: String)(f: => B): B = apply(module, None, None)(f)
 
-  def apply[B, U](clas: Class[U], scalloptsO: Option[Scallop], sparkSessionO: Option[SparkSession])(f: => B): B = {
-    val businessLogger = BusinessLogger.forModule(clas)
+  def apply[B](module: String, scallopts: Scallop)(f: => B)(): B = apply(module, Some(scallopts), None)(f)
+
+  def apply[B](module: String, scallopts: Scallop, sparkSession: SparkSession)(f: => B): B = apply(module, Some(scallopts), Some(sparkSession))(f)
+
+  def apply[B](module: String, scalloptsO: Option[Scallop], sparkSessionO: Option[SparkSession])(f: => B): B = {
+    val businessLogger = new BusinessLogger(module)
 
     val optsString = scalloptsO
       .map { scallopts =>

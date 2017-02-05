@@ -12,13 +12,14 @@ import org.slf4j.{Logger, LoggerFactory}
 
 trait Module {
   protected val logger: Logger = LoggerFactory.getLogger(this.getClass)
+  protected implicit val module: Class[_ <: Module] = this.getClass
 
   def main(args: Array[String]): Unit = {
     val scallopts = Utils.getFiltersFromCLI(args)
     logger.info(scallopts.summary)
 
-    WithSparkSession(this.getClass) { implicit sparkSession =>
-      WithCalcLogging(this.getClass, scallopts, sparkSession) {
+    WithSparkSession() { implicit sparkSession =>
+      WithCalcLogging(scallopts, sparkSession) {
         execute(scallopts)
       }
     }
@@ -29,12 +30,13 @@ trait Module {
 
 abstract class StreamingModule(sparkPort: Int) {
   protected val logger: Logger = LoggerFactory.getLogger(this.getClass)
+  protected implicit val module: Class[_ <: StreamingModule] = this.getClass
 
   def main(args: Array[String]): Unit = {
     val scallopts = Utils.getStreamingFiltersFromCLI(args)
     logger.info(scallopts.summary)
 
-    WithSparkSession(this.getClass, streaming = true, sparkPort = sparkPort) { implicit sparkSession =>
+    WithSparkSession(streaming = true, sparkPort = sparkPort) { implicit sparkSession =>
       execute
     }
   }
@@ -45,57 +47,55 @@ abstract class StreamingModule(sparkPort: Int) {
 trait ParquetExtensions[T] {
   val parquetFile: String
 
-  def saveResultsToParquet[U](module: Class[U], ds: Dataset[T])(implicit sparkSession: SparkSession): Unit = {
+  def saveResultsToParquet(ds: Dataset[T])(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Unit = {
     val parquetFileTemp = parquetFile + ".inprogress"
 
     if (Utils.existsParquetFile(parquetFileTemp))
       Utils.deleteParquetFile(parquetFileTemp)
 
-    import sparkSession.implicits._
+    logger.debug(s"Saving $parquetFile to a temporary parquet file $parquetFileTemp...")
+    try {
+      Utils.saveAsParquetFile(ds, parquetFileTemp)
+    } catch {
+      case e: Exception =>
+        logger.error(s"An error occurred while saving the temporary parquet file, leaving the original parquet file $parquetFile untouched.")
+        throw e
+    }
 
-      logger.debug(s"Saving $parquetFile to a temporary parquet file $parquetFileTemp...")
-      try {
-        Utils.saveAsParquetFile(ds, parquetFileTemp)
-      } catch {
-        case e: Exception =>
-          logger.error(s"An error occurred while saving the temporary parquet file, leaving the original parquet file $parquetFile untouched.")
-          throw e
+    sparkSession.sparkContext.setJobGroup(module.getClass.getName + ".save", module.getClass.getName + ".save")
+
+    val countBefore =
+      if (Utils.existsParquetFile(parquetFile)) {
+        val parquetFileBefore = loadResultsFromParquetAsDF(module, sparkSession)
+        sparkSession.sparkContext.setJobDescription(s"Count parquet file before - $parquetFile")
+        parquetFileBefore.count
       }
+      else
+        0
 
-      sparkSession.sparkContext.setJobGroup(module.getClass.getName + ".save", module.getClass.getName + ".save")
+    val parquetFileAfter = Utils.loadParquetFile(parquetFileTemp)
+    sparkSession.sparkContext.setJobDescription(s"Count parquet file after - $parquetFile")
+    val countAfter = parquetFileAfter.count
+    new BusinessLogger(module.getName).dataParquetWritten(parquetFile, countBefore, countAfter)
+    logger.info(s"Stored $countAfter $parquetFile, diff is ${countAfter - countBefore}")
 
-      val countBefore =
-        if (Utils.existsParquetFile(parquetFile)) {
-          val parquetFileBefore = loadResultsFromParquetAsDF(module)
-          sparkSession.sparkContext.setJobDescription(s"Count parquet file before - $parquetFile")
-          parquetFileBefore.count
-        }
-        else
-          0
+    logger.debug(s"Moving the temporary parquet file $parquetFileTemp to its final destination...")
+    if (Utils.existsParquetFile(parquetFile))
+      Utils.deleteParquetFile(parquetFile)
 
-      val parquetFileAfter = Utils.loadParquetFile(parquetFileTemp)
-      sparkSession.sparkContext.setJobDescription(s"Count parquet file after - $parquetFile")
-      val countAfter = parquetFileAfter.count
-      BusinessLogger.forModule(module).dataParquetWritten(parquetFile, countBefore, countAfter)
-      logger.info(s"Stored $countAfter $parquetFile, diff is ${countAfter - countBefore}")
-
-      logger.debug(s"Moving the temporary parquet file $parquetFileTemp to its final destination...")
-      if (Utils.existsParquetFile(parquetFile))
-        Utils.deleteParquetFile(parquetFile)
-
-      Utils.moveParquetFile(parquetFileTemp, parquetFile)
+    Utils.moveParquetFile(parquetFileTemp, parquetFile)
   }
 
-  def loadResultsFromParquetAsDFO[U](implicit sparkSession: SparkSession): Option[DataFrame] = {
+  def loadResultsFromParquetAsDFO(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Option[DataFrame] = {
     if (Utils.existsParquetFile(parquetFile))
-      Some(loadResultsFromParquetAsDF)
+      Some(loadResultsFromParquetAsDF(module, sparkSession))
     else
       None
   }
 
-  def loadResultsFromParquetAsDF[U](module: Class[U])(implicit sparkSession: SparkSession): DataFrame = {
+  def loadResultsFromParquetAsDF(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): DataFrame = {
     logger.info(s"Loading parquet from $parquetFile...")
-    BusinessLogger.forModule(module).dataParquetRead(parquetFile)
+    new BusinessLogger(module.getName).dataParquetRead(parquetFile)
     Utils.loadParquetFile(parquetFile) // dont call loadResultsFromParquetAsDF to avoid a stack overflow when it is overridden in the subclass
   }
 
@@ -104,7 +104,7 @@ trait ParquetExtensions[T] {
     Utils.loadParquetFile(parquetFile)
   }
 
-  def getLastModifiedFromParquetO(implicit sparkSession: SparkSession): Option[Timestamp] = {
+  def getLastModifiedFromParquetO(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Option[Timestamp] = {
     loadResultsFromParquetAsDFO
       .flatMap { dataframe =>
         if (dataframe.columns.contains("lastModified"))

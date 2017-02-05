@@ -3,17 +3,13 @@ package biz.meetmatch.logging
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date}
 
-import org.apache.spark.sql.SparkSession
-import org.rogach.scallop.Scallop
 import org.slf4j.LoggerFactory
 
 object BusinessLogger {
-  def forModule[U](module: Class[U]) = new BusinessLogger(module.getName)
-
   def getDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 }
 
-class BusinessLogger[U](module: String) {
+class BusinessLogger(module: String) {
   private val logger = LoggerFactory.getLogger("businessLogger")
 
   def calcStarted(options: String, sparkAppId: String): Unit = {

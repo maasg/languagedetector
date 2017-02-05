@@ -15,6 +15,7 @@ import org.rogach.scallop.Scallop
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
+import scala.language.experimental.macros
 
 object Utils {
   val cf: Config = ConfigFactory.load("local").withFallback(ConfigFactory.load())
@@ -173,3 +174,4 @@ object Utils {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 }
+

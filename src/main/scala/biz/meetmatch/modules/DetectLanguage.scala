@@ -1,25 +1,13 @@
 package biz.meetmatch.modules
 
-import biz.meetmatch.decorators.{WithCalcLogging, WithSparkSession}
 import biz.meetmatch.model.Sentence
 import biz.meetmatch.pos.{LanguageDetector, SentenceExtractor}
 import biz.meetmatch.util.Utils
 import org.apache.spark.sql.{Dataset, SparkSession}
 import org.rogach.scallop.Scallop
-import org.slf4j.{Logger, LoggerFactory}
 
 object DetectLanguage extends Module with ParquetExtensions[Sentence] {
-  override protected val logger: Logger = LoggerFactory.getLogger(this.getClass)
-
   override val parquetFile = "Sentences"
-
-  override def main(args: Array[String]): Unit = {
-    WithCalcLogging(this.getClass) {
-      WithSparkSession(this.getClass) { implicit sparkSession =>
-        execute(Utils.getFiltersFromCLI(args))
-      }
-    }
-  }
 
   override def execute(scallopts: Scallop)(implicit sparkSession: SparkSession): Unit = {
     val inputFile = scallopts.get[String]("file").getOrElse(Utils.getConfig("languagedetector.inputFile"))
@@ -28,7 +16,7 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
 
     val JobTitleWithSimilaritiesDS = calc(textDS)
 
-    saveResultsToParquet(this.getClass, JobTitleWithSimilaritiesDS)
+    saveResultsToParquet(JobTitleWithSimilaritiesDS)
   }
 
   /**
@@ -57,13 +45,9 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
     Utils.loadWholeTextFileAbs(path)
   }
 
-  def loadResultsFromParquet(implicit sparkSession: SparkSession): Dataset[Sentence] = {
-    loadResultsFromParquet(this.getClass)
-  }
-
-  def loadResultsFromParquet[U](module: Class[U])(implicit sparkSession: SparkSession): Dataset[Sentence] = {
+  def loadResultsFromParquet(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Dataset[Sentence] = {
     import sparkSession.implicits._
-    loadResultsFromParquetAsDF(module).as[Sentence]
+    loadResultsFromParquetAsDF(module, sparkSession).as[Sentence]
   }
 }
 
