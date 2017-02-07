@@ -13,7 +13,7 @@ class DetectLanguageSpec extends UnitWithSparkSpec {
 
     val sentences = DetectLanguage.calc(textDS).collect
 
-    sentences.length should be(3)
+    sentences should have length 3
     sentences(0).language should be("nl")
     sentences(1).language should be("en")
     sentences(2).language should be("fr")

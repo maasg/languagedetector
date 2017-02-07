@@ -4,7 +4,7 @@ import biz.meetmatch.logging.BusinessLogger
 import org.apache.spark.TaskContext
 
 object WithCalcTransactionLogging {
-  def apply[B, U](category: String, id: String, message: String = "")(f: => B)(implicit module: Class[_]): B = {
+  def apply[B](category: String, id: String, message: String = "")(f: => B)(implicit module: Class[_]): B = {
     val businessLogger = new BusinessLogger(module.getName)
 
     val taskContext = TaskContext.get

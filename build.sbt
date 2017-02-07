@@ -34,7 +34,9 @@ libraryDependencies += "com.google.code.gson" % "gson" % "1.7.1"
 // http client
 libraryDependencies += "org.scalaj" %% "scalaj-http" % "2.3.0"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+libraryDependencies += "org.reflections" % "reflections" % "0.9.10"
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % Test
 
 javaOptions in Test += "-Dconfig.resource=test.conf"
 

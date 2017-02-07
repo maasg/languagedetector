@@ -16,7 +16,7 @@ class PimpersSpec extends UnitSpec {
 
     val reverseTop10Par = collection.par.top(5)(-1 * _._1)
 
-    reverseTop10Par.length should be(5)
+    reverseTop10Par should have length 5
     reverseTop10Par.head should be((100, 100))
   }
 
