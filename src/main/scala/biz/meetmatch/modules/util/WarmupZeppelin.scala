@@ -1,5 +1,6 @@
-package biz.meetmatch.modules
+package biz.meetmatch.modules.util
 
+import biz.meetmatch.modules.Module
 import biz.meetmatch.util.Utils
 import com.google.gson.Gson
 import org.apache.spark.sql.SparkSession
