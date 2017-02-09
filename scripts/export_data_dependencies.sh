@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -e
 
-echo "biz.meetmatch.util.DataDependencyPrinter.saveModuleDependenciesToJson" | sbt -Dconfig.resource=test.conf console
+echo "biz.meetmatch.util.DataDependencyPrinter.exportModuleDependenciesToJson" | sbt -Dconfig.resource=test.conf console

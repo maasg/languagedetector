@@ -84,7 +84,7 @@ object DataDependencyPrinter {
       .toMap
   }
 
-  def saveModuleDependenciesToJson(): Unit = {
+  def exportModuleDependenciesToJson(): Unit = {
     val nodes = getModules
       .filterNot(isAbstractClass)
       .map { module =>
