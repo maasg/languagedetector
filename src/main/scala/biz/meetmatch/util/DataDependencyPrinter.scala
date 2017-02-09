@@ -1,8 +1,12 @@
 package biz.meetmatch.util
 
+import java.io.File
 import java.lang.reflect.{Member, Modifier}
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Files, Paths}
 
 import biz.meetmatch.modules.Module
+import org.apache.commons.io.FileUtils
 import org.reflections.Reflections
 import org.reflections.scanners.{MemberUsageScanner, MethodParameterNamesScanner, MethodParameterScanner, SubTypesScanner}
 import org.reflections.util.{ClasspathHelper, ConfigurationBuilder}
@@ -80,6 +84,35 @@ object DataDependencyPrinter {
       .toMap
   }
 
+  def saveModuleDependenciesToJson(): Unit = {
+    val nodes = getModules
+      .filterNot(isAbstractClass)
+      .map { module =>
+        val moduleName = formatModuleName(module.getName)
+        "{data: {id:'" + moduleName.toLowerCase + "', label: '" + moduleName.replaceAll("(.)([A-Z])", "$1 $2") + "'}}"
+      }
+      .mkString(",\n")
+
+    val edges = getModuleDependencies.map { case (module, deps) =>
+      deps
+        .map(dep => "{data: {source:'" + dep.toLowerCase + "', target: '" + module.toLowerCase + "'}}")
+        .mkString(",\n")
+    }
+
+    val json = s"{nodes: [ $nodes ], edges: [ $edges ]"
+
+    val path = Utils.getConfig("spark.content") + "/text/data-dependencies.json"
+    val file = new File(path)
+
+    FileUtils.forceMkdir(file.getParentFile)
+
+    if (file.exists)
+      FileUtils.forceDelete(file)
+
+    Files.write(Paths.get(path), json.getBytes(StandardCharsets.UTF_8))
+    println("The data dependencies were exported to " + path)
+  }
+
   def printModuleDependenciesForNeo4j(): Unit = {
     getModules
       .filterNot(isAbstractClass)
@@ -100,5 +133,5 @@ object DataDependencyPrinter {
     println("MATCH (n) RETURN n")
   }
 
-  def formatModuleName(moduleName: String): String = moduleName.replace(modulesPkg + ".", "").split("\\$\\$").head.replace("$", "")
+  private def formatModuleName(moduleName: String): String = moduleName.replace(modulesPkg + ".", "").split("\\$\\$").head.replace("$", "")
 }
