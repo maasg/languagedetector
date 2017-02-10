@@ -1,4 +1,4 @@
-package biz.meetmatch.pos
+package biz.meetmatch.language
 
 import com.optimaize.langdetect.LanguageDetectorBuilder
 import com.optimaize.langdetect.ngram.NgramExtractors

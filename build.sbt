@@ -7,9 +7,9 @@ scalaVersion := "2.11.8"
 val sparkVersion = "2.1.0"
 
 //spark
-libraryDependencies += "org.apache.spark" %% "spark-core" % sparkVersion % "provided"
-libraryDependencies += "org.apache.spark" %% "spark-sql" % sparkVersion % "provided"
-libraryDependencies += "org.apache.spark" %% "spark-streaming" % sparkVersion % "provided"
+libraryDependencies += "org.apache.spark" %% "spark-core" % sparkVersion % Provided
+libraryDependencies += "org.apache.spark" %% "spark-sql" % sparkVersion % Provided
+libraryDependencies += "org.apache.spark" %% "spark-streaming" % sparkVersion % Provided
 
 libraryDependencies += "com.typesafe" % "config" % "1.3.1"
 
@@ -20,10 +20,6 @@ libraryDependencies += "org.apache.commons" % "commons-io" % "1.3.2"
 
 // scallop command line arg parsing
 libraryDependencies += "org.rogach" %% "scallop" % "2.0.6"
-
-//nlp - stanford
-libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0"
-libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0" classifier "models"
 
 // language detection
 libraryDependencies += "com.optimaize.languagedetector" % "language-detector" % "0.6"
@@ -53,3 +49,6 @@ assemblyMergeStrategy in assembly := {
 // don't include scala libs
 assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
 //sbt-assembly settings =======================
+
+// add the dependencies defined as "provided" to sbt run-main
+runMain in Compile <<= Defaults.runMainTask(fullClasspath in Compile, runner in (Compile, run))

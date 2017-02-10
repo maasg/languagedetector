@@ -1,4 +1,4 @@
-package biz.meetmatch.pos
+package biz.meetmatch.language
 
 import biz.meetmatch.UnitSpec
 
