@@ -1,3 +1,3 @@
 package biz.meetmatch.model
 
-case class Sentence(content: String, language: String)
+case class Sentence(content: String, language: String, detectedLanguage: String)

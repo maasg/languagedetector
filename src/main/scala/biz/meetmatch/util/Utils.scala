@@ -44,6 +44,7 @@ object Utils {
     val sparkSession = SparkSession.builder()
       .appName(appName)
       .master(cf.getString("spark.master"))
+      .config("spark.driver.host", "localhost") // without this setting spark fails when run on mac without an internet connection
       .config("spark.driver.memory", cf.getString("spark.driver.memory"))
       .config("spark.executor.memory", cf.getString("spark.executor.memory"))
       .config("spark.eventLog.enabled", "true")
@@ -98,6 +99,11 @@ object Utils {
     if (absolutePath.exists) FileUtils.deleteDirectory(absolutePath)
 
     rdd.saveAsTextFile(s"$getTextFileRoot/$path")
+  }
+
+  def loadTextFileAbs(path: String)(implicit sparkSession: SparkSession): Dataset[String] = {
+    import sparkSession.implicits._
+    sparkSession.sparkContext.textFile(path).toDS
   }
 
   def loadTextFile(path: String)(implicit sparkSession: SparkSession): Dataset[String] = {

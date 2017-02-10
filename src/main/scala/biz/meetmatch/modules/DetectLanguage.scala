@@ -1,7 +1,7 @@
 package biz.meetmatch.modules
 
+import biz.meetmatch.language.LanguageDetector
 import biz.meetmatch.model.Sentence
-import biz.meetmatch.pos.{LanguageDetector, SentenceExtractor}
 import biz.meetmatch.util.Utils
 import org.apache.spark.sql.{Dataset, SparkSession}
 import org.rogach.scallop.Scallop
@@ -25,24 +25,24 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
     * @param sparkSession spark session
     * @return
     */
-  def calc(textDS: Dataset[(String, String)])(implicit sparkSession: SparkSession): Dataset[Sentence] = {
+  def calc(textDS: Dataset[String])(implicit sparkSession: SparkSession): Dataset[Sentence] = {
     import sparkSession.implicits._
     sparkSession.sparkContext.setJobGroup(this.getClass.getName, this.getClass.getName)
 
     sparkSession.sparkContext.setJobDescription("Detect the language of the text")
-    textDS.mapPartitions { text =>
-      val sentenceExtractor = new SentenceExtractor()
-      val languageDetector = new LanguageDetector()
-      text.flatMap { case (fileName, content) =>
-        sentenceExtractor
-          .convertTextToSentences(content)
-          .map(sentence => Sentence(sentence, languageDetector.detectLanguage(sentence)))
+    textDS
+      .sample(withReplacement = true, 0.0005)
+      .map(line => line.split("\t"))
+      .mapPartitions { sentences =>
+        sentences.map { case Array(id, language, sentence) =>
+          val languageDetector = new LanguageDetector()
+          Sentence(sentence, language, languageDetector.detectLanguage(sentence))
+        }
       }
-    }
   }
 
-  def loadInputTextFromFile(path: String)(implicit sparkSession: SparkSession): Dataset[(String, String)] = {
-    Utils.loadWholeTextFileAbs(path)
+  def loadInputTextFromFile(path: String)(implicit sparkSession: SparkSession): Dataset[String] = {
+    Utils.loadTextFileAbs(path)
   }
 
   def loadResultsFromParquet(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Dataset[Sentence] = {
