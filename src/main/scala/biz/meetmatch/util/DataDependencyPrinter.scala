@@ -28,7 +28,11 @@ object DataDependencyPrinter {
   )
 
   def main(args: Array[String]): Unit = {
-    printModuleDependenciesForNeo4j()
+    val mode = args.headOption.getOrElse("json")
+    if (mode == "neo4j")
+      printModuleDependenciesForNeo4j()
+    else
+      exportModuleDependenciesToJson()
   }
 
   def isAbstractClass(clas: Class[_]): Boolean = Modifier.isAbstract(clas.getModifiers)
@@ -49,39 +53,47 @@ object DataDependencyPrinter {
       }
   }
 
-  def getModuleDependencies: Map[String, Set[String]] = {
-    val dependencyMethodNames = Array("loadResultsFromParquet", "getResultsFileLocation")
-
+  def getAllModuleDependencies: Array[(String, String)] = {
     getModules
-      .flatMap { module =>
-        val modules = (if (isAbstractClass(module)) Array() else Array(module)) ++ getAllConcreteSubClasses(module)
+      .toArray
+      .filterNot(isAbstractClass)
+      .flatMap(getModuleDependencies)
+      .distinct
+  }
 
-        module.getMethods
-          .filter(m => dependencyMethodNames.contains(m.getName))
-          .map { method =>
-            reflections
-              .getMethodUsage(method)
-              .asScala
-              .toSet[Member]
-              .map(_.getDeclaringClass)
-              .flatMap(dependentModule => (if (isAbstractClass(dependentModule)) Array() else Array(dependentModule)) ++ getAllConcreteSubClasses(dependentModule))
-              .flatMap { dependentModule =>
-                if (dependentModule.getPackage.getName == modulesPkg)
-                  Some(formatModuleName(dependentModule.getName))
-                else
-                  None
-              }
-          }
-          .flatMap { dependentModules =>
-            modules.map { module =>
-              val moduleName = formatModuleName(module.getName)
+  def getModuleDependencies(module: Class[_ <: Module]): Seq[(String, String)] = {
+    val dependencyMethodNames = Array("loadResultsFromParquet", "loadResultsFromParquetAsDF", "getResultsFileLocation")
+    val interestingMethods = module.getMethods
+      .filter(method => dependencyMethodNames.contains(method.getName))
+//      .filter(method => method.getDeclaringClass == module)
 
-              (moduleName, dependentModules.filter(_ != moduleName))
-            }
-          }
-          .distinct
+    val dependentModules = interestingMethods.flatMap { method =>
+      val directlyDependentModules = reflections
+        .getMethodUsage(method).asScala.toSet[Member] // this also includes all subclasses, superclasses and subclasses of the superclasses that directly or indirectly implement that same method
+        .filter(_.getName != method.getName) // remove all these subclasses, superclasses and subclasses of the superclasses
+        .map(member => (member.getDeclaringClass, member.getName))
+
+      val allDependentModules = directlyDependentModules
+        .flatMap { case (dependentModule, memberName) =>
+          (if (isAbstractClass(dependentModule)) Array() else Array(dependentModule)) ++
+            getAllConcreteSubClasses(dependentModule).filter(dependentSubModule => usesMethodOfSuperClass(memberName, dependentSubModule, dependentModule))
+        }
+
+      allDependentModules
+        .filterNot(dependentModule => dependentModule == module)
+        .filter(_.getPackage.getName == modulesPkg)
+    }
+
+    dependentModules.map { dependentModule => (formatModuleName(module.getName), formatModuleName(dependentModule.getName)) }
+  }
+
+  def usesMethodOfSuperClass(method: String, clas: Class[_], superClas: Class[_]): Boolean = {
+    clas.getMethods
+      .find(_.getName == method)
+      .forall { executeMethod =>
+        executeMethod.getDeclaringClass == superClas || // either the class simply inherits the method from the superclass
+          superClas.getMethods.find(_.getName == "execute").exists { method => reflections.getMethodUsage(method).asScala.toSet[Member].map(_.getDeclaringClass).contains(clas) } //or it overrides it and calls it explicitly
       }
-      .toMap
   }
 
   def exportModuleDependenciesToJson(): Unit = {
@@ -89,17 +101,15 @@ object DataDependencyPrinter {
       .filterNot(isAbstractClass)
       .map { module =>
         val moduleName = formatModuleName(module.getName)
-        "{data: {id:'" + moduleName.toLowerCase + "', label: '" + moduleName.replaceAll("(.)([A-Z])", "$1 $2") + "'}}"
+        """{"data": {"id":"""" + moduleName.toLowerCase + """", "label": """" + moduleName.replaceAll("(.)([A-Z])", "$1 $2") + """"}}"""
       }
       .mkString(",\n")
 
-    val edges = getModuleDependencies.map { case (module, deps) =>
-      deps
-        .map(dep => "{data: {source:'" + dep.toLowerCase + "', target: '" + module.toLowerCase + "'}}")
-        .mkString(",\n")
-    }
+    val edges = getAllModuleDependencies
+      .map { case (module, dep) => """{"data": {"source":"""" + dep.toLowerCase + """", "target": """" + module.toLowerCase + """"}}""" }
+      .mkString(",\n")
 
-    val json = s"{nodes: [ $nodes ], edges: [ $edges ]"
+    val json = s"""{"nodes": [ $nodes ], "edges": [ $edges ] }"""
 
     val path = Utils.getConfig("spark.content") + "/text/data-dependencies.json"
     val file = new File(path)
@@ -121,12 +131,7 @@ object DataDependencyPrinter {
         println("MERGE (" + moduleName.toLowerCase + ":Module{name: '" + moduleName + "', label: '" + moduleName.replaceAll("(.)([A-Z])", "$1 $2") + "'})")
       }
 
-    getModuleDependencies.foreach { case (module, deps) =>
-      deps
-        .foreach { dep =>
-          println("MERGE (" + dep.toLowerCase + ")-[:USES_RESULTS_FROM]->(" + module.toLowerCase + ")")
-        }
-    }
+    getAllModuleDependencies.foreach { case (module, dep) => println("MERGE (" + dep.toLowerCase + ")-[:USES_RESULTS_FROM]->(" + module.toLowerCase + ")") }
 
     println()
     println("run the following command separately to visualize the nodes and relations:")

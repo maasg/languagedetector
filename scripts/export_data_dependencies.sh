@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-echo "biz.meetmatch.util.DataDependencyPrinter.exportModuleDependenciesToJson" | sbt -Dconfig.resource=test.conf console
+cd $(dirname $0)/..
+sbt -Dconfig.resource=test.conf "run-main biz.meetmatch.util.DataDependencyPrinter"
+cd -
