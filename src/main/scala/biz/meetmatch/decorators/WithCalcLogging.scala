@@ -23,7 +23,7 @@ object WithCalcLogging {
     val optsString = scalloptsO
       .map { scallopts =>
         scallopts.opts
-          .map { opt => opt.name + "=" + scallopts(opt.name)(opt.converter.tag) }
+          .map { opt => opt.name + " = " + scallopts.get(opt.name)(opt.converter.tag).getOrElse("<None>") }
           .mkString(",")
       }
       .getOrElse("")
