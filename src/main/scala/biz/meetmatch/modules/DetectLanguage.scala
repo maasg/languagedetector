@@ -25,13 +25,12 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
     * @param sparkSession spark session
     * @return
     */
-  def calc(textDS: Dataset[String])(implicit sparkSession: SparkSession): Dataset[Sentence] = {
+  def calc(textDS: Dataset[String], sample: Boolean = true)(implicit sparkSession: SparkSession): Dataset[Sentence] = {
     import sparkSession.implicits._
     sparkSession.sparkContext.setJobGroup(this.getClass.getName, this.getClass.getName)
 
     sparkSession.sparkContext.setJobDescription("Detect the language of the text")
-    textDS
-      .sample(withReplacement = true, 0.0005)
+    (if(sample)textDS.sample(withReplacement = true, 0.0005) else textDS)
       .map(line => line.split("\t"))
       .mapPartitions { sentences =>
         sentences.map { case Array(id, language, sentence) =>
