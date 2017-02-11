@@ -11,8 +11,8 @@ SPARK_VERSION=2.1.0
 wget -P /tmp http://apache.belnet.be/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop2.7.tgz
 mkdir -p $SPARK_HOME
 
-tar xvf /tmp/spark-$SPARK_VERSION-bin-hadoop2.7.tgz -C $SPARK_HOME
-ln -fsn $SPARK_HOME/spark-$SPARK_VERSION-bin-hadoop2.7 $SPARK_HOME
+tar xvf /tmp/spark-$SPARK_VERSION-bin-hadoop2.7.tgz -C /opt
+ln -fsn /opt/spark-$SPARK_VERSION-bin-hadoop2.7 $SPARK_HOME
 mkdir -p /tmp/spark-events
 echo "Done."
 
