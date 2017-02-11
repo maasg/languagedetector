@@ -1,0 +1,111 @@
+{
+  "metadata" : {
+    "name" : "languagedetector",
+    "user_save_timestamp" : "1970-01-01T01:00:00.000Z",
+    "auto_save_timestamp" : "1970-01-01T01:00:00.000Z",
+    "language_info" : {
+      "name" : "scala",
+      "file_extension" : "scala",
+      "codemirror_mode" : "text/x-scala"
+    },
+    "trusted" : true,
+    "customLocalRepo" : null,
+    "customRepos" : null,
+    "customDeps" : null,
+    "customImports" : null,
+    "customArgs" : null,
+    "customSparkConf" : null
+  },
+  "cells" : [ {
+    "metadata" : {
+      "id" : "6A0173CB02C746EEBBBD49F0AFD0ADB9"
+    },
+    "cell_type" : "raw",
+    "source" : ""
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : true,
+      "id" : "6075EFE0F86C4D55804FE8F05D559093"
+    },
+    "cell_type" : "code",
+    "source" : "val inputFile = \"/Users/niek/data/test/languagedetector/text/sentences.csv\"\nval outputParqueFile = \"/Users/niek/data/test/languagedetector/parquet/Sentences\"",
+    "outputs" : [ ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false,
+      "id" : "7BE2F689B2AF4CFCB7CFD5C5BCFD28BC"
+    },
+    "cell_type" : "code",
+    "source" : "val textDS = sparkSession.sparkContext.textFile(inputFile).toDS",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "path: String = /Users/niek/data/test/languagedetector/text/sentences.csv\ntextDS: org.apache.spark.sql.Dataset[String] = [value: string]\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 4,
+      "time" : "Took: 973 milliseconds, at 2017-2-11 20:9"
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false,
+      "id" : "934CDFDE3A7545908B10A8EB5FE67554"
+    },
+    "cell_type" : "code",
+    "source" : "case class Sentence(content: String, language: String = \"\", detectedLanguage: String = \"\")",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "defined class Sentence\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 5,
+      "time" : "Took: 777 milliseconds, at 2017-2-11 20:10"
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : true,
+      "id" : "45364CABA5AA4F488EA9B55865942009"
+    },
+    "cell_type" : "code",
+    "source" : "// TODO: add LanguageDetector to class path\nval sentenceDS = textDS\n  .sample(withReplacement = true, 0.0005)\n  .map(line => line.split(\"\\t\"))\n  .mapPartitions { sentences =>\n    sentences.map { case Array(id, language, sentence) =>\n      val languageDetector = new LanguageDetector()\n      Sentence(sentence, language, languageDetector.detectLanguage(sentence))\n    }\n  }\n",
+    "outputs" : [ ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : true,
+      "id" : "B4816ED776E640ED8EFFA2FDABC3C2CE"
+    },
+    "cell_type" : "code",
+    "source" : "sentenceDS.write.mode(SaveMode.Overwrite).save(outputParqueFile)",
+    "outputs" : [ ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : true,
+      "id" : "D7EEBDEA9260411EBCC620C780C47CAA"
+    },
+    "cell_type" : "code",
+    "source" : "sparkSession.read.load(outputParqueFile)",
+    "outputs" : [ ]
+  } ],
+  "nbformat" : 4
+}
