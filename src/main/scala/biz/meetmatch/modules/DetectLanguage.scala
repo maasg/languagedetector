@@ -14,9 +14,9 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
 
     val textDS = loadInputTextFromFile(inputFile)
 
-    val JobTitleWithSimilaritiesDS = calc(textDS)
+    val sentenceDS = calc(textDS)
 
-    saveResultsToParquet(JobTitleWithSimilaritiesDS)
+    saveResultsToParquet(sentenceDS)
   }
 
   /**
