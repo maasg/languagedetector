@@ -9,10 +9,10 @@ class CountWrongDetectionsByLanguageSpec extends UnitWithSparkSpec {
     import sqlC.implicits._
 
     val sentenceDS = Seq(
-      Sentence("Dit is een Nederlandstalige tekst", language = "nld", detectedLanguage = "nl"),
-      Sentence("En dit ook", language = "nld", detectedLanguage = "de"),
-      Sentence("And this is a text written in English", language = "eng", detectedLanguage = "en"),
-      Sentence("Par conte, ça c'est un texte ecrit en Français", language = "fra", detectedLanguage = "fr")
+      Sentence("Dit is een Nederlandstalige tekst", actualLanguage = "nld", detectedLanguage = "nl"),
+      Sentence("En dit ook", actualLanguage = "nld", detectedLanguage = "de"),
+      Sentence("And this is a text written in English", actualLanguage = "eng", detectedLanguage = "en"),
+      Sentence("Par conte, ça c'est un texte ecrit en Français", actualLanguage = "fra", detectedLanguage = "fr")
     ).toDS
 
     val countryCodes = List(
@@ -25,6 +25,6 @@ class CountWrongDetectionsByLanguageSpec extends UnitWithSparkSpec {
     val wrongDetections = CountWrongDetectionsByLanguage.calc(sentenceDS, countryCodes).collect
 
     wrongDetections should have length 1
-    wrongDetections.find(_.language == "nl").map(_.count) should be(Some(1))
+    wrongDetections.find(_.actualLanguage == "nl").map(_.count) should be(Some(1))
   }
 }

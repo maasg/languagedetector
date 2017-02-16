@@ -18,8 +18,8 @@ class CountSentencesByLanguageSpec extends UnitWithSparkSpec {
     val sentenceCounts = CountSentencesByLanguage.calc(sentenceDS).collect
 
     sentenceCounts should have length 3
-    sentenceCounts.find(_.language == "nl").map(_.count) should be(Some(2))
-    sentenceCounts.find(_.language == "en").map(_.count) should be(Some(1))
-    sentenceCounts.find(_.language == "fr").map(_.count) should be(Some(1))
+    sentenceCounts.find(_.detectedLanguage == "nl").map(_.count) should be(Some(2))
+    sentenceCounts.find(_.detectedLanguage == "en").map(_.count) should be(Some(1))
+    sentenceCounts.find(_.detectedLanguage == "fr").map(_.count) should be(Some(1))
   }
 }

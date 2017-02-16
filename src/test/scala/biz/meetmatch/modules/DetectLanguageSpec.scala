@@ -16,6 +16,6 @@ class DetectLanguageSpec extends UnitWithSparkSpec {
     val sentences = DetectLanguage.calc(textDS, sample = false).collect
 
     sentences should have length 3
-    sentences.foreach(sentence => sentence.detectedLanguage should be(sentence.language))
+    sentences.foreach(sentence => sentence.detectedLanguage should be(sentence.actualLanguage))
   }
 }
