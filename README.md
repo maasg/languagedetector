@@ -19,7 +19,7 @@ nano settings.sh
 4] copy (and if necessary modify) the environment specific test.conf file to your needs:
 ```shell
 . settings.sh
-mkdir ${APP_DIR}/conf
+mkdir -p ${APP_DIR}/conf
 cp src/main/resources/test.conf ${APP_DIR}/conf/
 nano ${APP_DIR}/conf/test.conf
 ```
@@ -30,8 +30,8 @@ nano ${APP_DIR}/conf/test.conf
 scripts/package_app_dependencies.sh # only run this when the dependencies have changed
 scripts/package_app.sh
 
-# submit the spark app
-scripts/spark_submit.sh workflow.Workflow --file /path/to/file # the spark app is executed in the background but the logs are shown using a tail in the foreground so you can ctrl+c at any time without killing the spark app
+# submit the spark app with the example dataset that is included in this repo
+scripts/spark_submit.sh workflow.Workflow --file datasets/sentences.tsv # the spark app is executed in the background but the logs are shown using a tail in the foreground so you can ctrl+c at any time without killing the spark app
 
 # view the results
 scripts/spark_shell.sh # note: ignore the java.io.FileNotFoundException
@@ -87,7 +87,7 @@ object Workflow extends WorkflowBase {
 Scipts exist to package the application and its dependencies into jar files. These files can be passed on to Spark, together with the module or workflow you want it to execute. 
 ```bash
 scripts/spark_submit.sh modules.DetectLanguage --file datasets/sentences.tsv # run one module
-scripts/spark_submit.sh workflow.Workflow --file datasets/sentences.tsv # run a workflow consisting of oen or more modules
+scripts/spark_submit.sh workflow.Workflow --file datasets/sentences.tsv # run a workflow consisting of one or more modules
 ```
 Information that is specific to an environment like cpu settings, passwords, filesystem locations, etc is kept in environment-specific config files. When an application is executed, it is important to pass the config file that applies to the correct environment. The scripts have the environment 'test' hardcoded for now so they will use the ```${APP_DIR}/conf/test.conf``` file
 
@@ -110,4 +110,5 @@ A section is available for each of the executed modules that shows the parquet f
 Data dependencies between modules are derived automatically and can be consulted in the language detector UI:
 ![alt text](https://github.com/tolomaus/languagedetector/blob/master/data-dependencies.png "data-dependencies")
 
+Make sure to export the data dependencies first using ```scripts/export_data_dependencies.sh```
 
