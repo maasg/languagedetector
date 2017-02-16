@@ -15,7 +15,7 @@ APP_CONFIG=/root/cruncher/${ENV}.conf
 touch ${LOG_DIR}/${BUSLOGFILE}
 ln -sf ${LOG_DIR}/${BUSLOGFILE} ${LOG_DIR}/businessLog_latest.log
 
-touch /tmp/spark-events
+mkdir -p /tmp/spark-events
 
 echo "Start a VisualVM JMX session to myservername.com:9080"
 # add the dependencies to the class path using "--driver-class-path" otherwise the guava lib v14.0 from spark is taken while languagedetect needs >= 18.0

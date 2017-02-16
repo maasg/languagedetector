@@ -15,7 +15,7 @@ APP_CONFIG=${APP_DIR}/conf/${ENV}.conf
 touch ${LOG_DIR}/${BUSLOGFILE}
 ln -sf ${LOG_DIR}/${BUSLOGFILE} ${LOG_DIR}/businessLog_latest.log
 
-touch /tmp/spark-events
+mkdir -p /tmp/spark-events
 
 echo "Start an IntelliJ remote debugging session to port 5005"
 # add the dependencies to the class path using "--driver-class-path" otherwise the guava lib v14.0 from spark is taken while languagedetect needs >= 18.0
