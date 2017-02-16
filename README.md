@@ -86,8 +86,8 @@ object Workflow extends WorkflowBase {
 ### packaging and environment-awareness
 Scipts exist to package the application and its dependencies into jar files. These files can be passed on to Spark, together with the module or workflow you want it to execute. 
 ```bash
-scripts/spark_submit.sh modules.DetectLanguage --file /path/to/file # run one module
-scripts/spark_submit.sh workflow.Workflow --file /path/to/file # run a workflow consisting of oen or more modules
+scripts/spark_submit.sh modules.DetectLanguage --file datasets/sentences.tsv # run one module
+scripts/spark_submit.sh workflow.Workflow --file datasets/sentences.tsv # run a workflow consisting of oen or more modules
 ```
 Information that is specific to an environment like cpu settings, passwords, filesystem locations, etc is kept in environment-specific config files. When an application is executed, it is important to pass the config file that applies to the correct environment. The scripts have the environment 'test' hardcoded for now so they will use the ```${APP_DIR}/conf/test.conf``` file
 
