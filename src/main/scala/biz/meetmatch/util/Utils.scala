@@ -48,7 +48,6 @@ object Utils {
       .config("spark.driver.memory", cf.getString("spark.driver.memory"))
       .config("spark.executor.memory", cf.getString("spark.executor.memory"))
       .config("spark.eventLog.enabled", "true")
-      .config("spark.sql.shuffle.partitions", "16") //default is 200
       .config("spark.ui.port", sparkPort)
       .getOrCreate()
 
@@ -103,6 +102,7 @@ object Utils {
 
   def loadTextFileAbs(path: String)(implicit sparkSession: SparkSession): Dataset[String] = {
     import sparkSession.implicits._
+
     sparkSession.sparkContext.textFile(path).toDS
   }
 
