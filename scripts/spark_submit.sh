@@ -19,6 +19,8 @@ ln -sf ${LOG_DIR}/${LOGFILE} ${LOG_DIR}/log_latest.log
 touch ${LOG_DIR}/${BUSLOGFILE}
 ln -sf ${LOG_DIR}/${BUSLOGFILE} ${LOG_DIR}/businessLog_latest.log
 
+touch /tmp/spark-events
+
 # add the dependencies to the class path using "--driver-class-path" otherwise the guava lib v14.0 from spark is taken while languagedetect needs >= 18.0
 nohup ${SPARK_HOME}/bin/spark-submit --jars ${APP_DIR}/languagedetector-assembly-1.0-deps.jar --class biz.meetmatch.$CLASS --driver-memory 4g --driver-java-options "-Dconfig.file=${APP_CONFIG} -DbusinessLogFileName=${LOG_DIR}/${BUSLOGFILE}" --driver-class-path "${APP_DIR}/languagedetector-assembly-1.0-deps.jar" ${APP_DIR}/languagedetector_2.11-1.0.jar "$@" > ${LOG_DIR}/${LOGFILE} 2>&1 &
 
