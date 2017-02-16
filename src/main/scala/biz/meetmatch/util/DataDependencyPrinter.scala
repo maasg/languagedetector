@@ -10,11 +10,14 @@ import org.apache.commons.io.FileUtils
 import org.reflections.Reflections
 import org.reflections.scanners.{MemberUsageScanner, MethodParameterNamesScanner, MethodParameterScanner, SubTypesScanner}
 import org.reflections.util.{ClasspathHelper, ConfigurationBuilder}
+import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 object DataDependencyPrinter {
+  private val logger = LoggerFactory.getLogger(this.getClass)
+
   val modulesPkg = "biz.meetmatch.modules"
   val reflections = new Reflections(
     new ConfigurationBuilder()
@@ -62,16 +65,22 @@ object DataDependencyPrinter {
   }
 
   def getModuleDependencies(module: Class[_ <: Module]): Seq[(String, String)] = {
+    println(module.getName + ":")
     val dependencyMethodNames = Array("loadResultsFromParquet", "loadResultsFromParquetAsDF", "getResultsFileLocation")
     val interestingMethods = module.getMethods
       .filter(method => dependencyMethodNames.contains(method.getName))
-//      .filter(method => method.getDeclaringClass == module)
 
     val dependentModules = interestingMethods.flatMap { method =>
+      println("\t" + method.getName + ":")
       val directlyDependentModules = reflections
         .getMethodUsage(method).asScala.toSet[Member] // this also includes all subclasses, superclasses and subclasses of the superclasses that directly or indirectly implement that same method
         .filter(_.getName != method.getName) // remove all these subclasses, superclasses and subclasses of the superclasses
         .map(member => (member.getDeclaringClass, member.getName))
+        .filter { case (dependentModule, memberName) => dependentModule != method.getDeclaringClass } // don't allow the module of the method itself as a dependent module (would generate unwanted dependencies between its subclasses)
+
+      directlyDependentModules.foreach { case (dependentModule, memberName) =>
+        println("\t\tdirectly depending module: " + dependentModule.getName + " " + memberName)
+      }
 
       val allDependentModules = directlyDependentModules
         .flatMap { case (dependentModule, memberName) =>
@@ -79,9 +88,15 @@ object DataDependencyPrinter {
             getAllConcreteSubClasses(dependentModule).filter(dependentSubModule => usesMethodOfSuperClass(memberName, dependentSubModule, dependentModule))
         }
 
-      allDependentModules
+      val allDependentModulesFiltered = allDependentModules
         .filterNot(dependentModule => dependentModule == module)
         .filter(_.getPackage.getName == modulesPkg)
+
+      allDependentModulesFiltered.foreach { dependentModule =>
+        println("\t\tindirectly depending module: " + dependentModule.getName)
+      }
+
+      allDependentModulesFiltered
     }
 
     dependentModules.map { dependentModule => (formatModuleName(module.getName), formatModuleName(dependentModule.getName)) }
@@ -106,7 +121,7 @@ object DataDependencyPrinter {
       .mkString(",\n")
 
     val edges = getAllModuleDependencies
-      .map { case (module, dep) => """{"data": {"source":"""" + dep.toLowerCase + """", "target": """" + module.toLowerCase + """"}}""" }
+      .map { case (module, dep) => """{"data": {"source":"""" + module.toLowerCase + """", "target": """" + dep.toLowerCase + """"}}""" }
       .mkString(",\n")
 
     val json = s"""{"nodes": [ $nodes ], "edges": [ $edges ] }"""
@@ -131,7 +146,7 @@ object DataDependencyPrinter {
         println("MERGE (" + moduleName.toLowerCase + ":Module{name: '" + moduleName + "', label: '" + moduleName.replaceAll("(.)([A-Z])", "$1 $2") + "'})")
       }
 
-    getAllModuleDependencies.foreach { case (module, dep) => println("MERGE (" + dep.toLowerCase + ")-[:USES_RESULTS_FROM]->(" + module.toLowerCase + ")") }
+    getAllModuleDependencies.foreach { case (module, dep) => println("MERGE (" + module.toLowerCase + ")-[:NEXT]->(" + dep.toLowerCase + ")") }
 
     println()
     println("run the following command separately to visualize the nodes and relations:")
