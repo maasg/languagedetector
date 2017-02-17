@@ -13,7 +13,7 @@ class DetectLanguageSpec extends UnitWithSparkSpec {
       "3\tfr\tPar conte, ça c'est un texte ecrit en Français"
     ).toDS
 
-    val sentences = DetectLanguage.calc(textDS, sample = false).collect
+    val sentences = DetectLanguage.calc(textDS).collect
 
     sentences should have length 3
     sentences.foreach(sentence => sentence.detectedLanguage should be(sentence.actualLanguage))

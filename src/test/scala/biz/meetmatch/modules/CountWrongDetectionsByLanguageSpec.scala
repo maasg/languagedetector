@@ -15,14 +15,7 @@ class CountWrongDetectionsByLanguageSpec extends UnitWithSparkSpec {
       Sentence("Par conte, ça c'est un texte ecrit en Français", actualLanguage = "fra", detectedLanguage = "fr")
     ).toDS
 
-    val countryCodes = List(
-      "Dutch\tNL\tNLD",
-      "German\tDE\tDEU",
-      "English\tEN\tENG",
-      "French\tFR\tFRA"
-    )
-
-    val wrongDetections = CountWrongDetectionsByLanguage.calc(sentenceDS, countryCodes).collect
+    val wrongDetections = CountWrongDetectionsByLanguage.calc(sentenceDS).collect
 
     wrongDetections should have length 1
     wrongDetections.find(_.actualLanguage == "nl").map(_.count) should be(Some(1))
