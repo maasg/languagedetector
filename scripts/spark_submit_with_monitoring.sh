@@ -1,21 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-ENV=test
-
-. $(dirname $0)/../settings.sh
-
-CLASS=$1
-DATE=$(date +"%Y%m%d%H%M")
-BUSLOGFILE=businessLog_${DATE}.log
+. $(dirname $0)/spark_submit_prep.sh "$@"
 shift;
-
-APP_CONFIG=/root/cruncher/${ENV}.conf
-
-touch ${LOG_DIR}/${BUSLOGFILE}
-ln -sf ${LOG_DIR}/${BUSLOGFILE} ${LOG_DIR}/businessLog_latest.log
-
-mkdir -p /tmp/spark-events
+shift;
 
 echo "Start a VisualVM JMX session to myservername.com:9080"
 # add the dependencies to the class path using "--driver-class-path" otherwise the guava lib v14.0 from spark is taken while languagedetect needs >= 18.0
