@@ -31,6 +31,7 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
 
     sparkSession.sparkContext.setJobDescription("Detect the language of the text")
     textDS
+      .repartition(Utils.getDefaultNumPartitions)
       .map(line => line.split("\t"))
       .mapPartitions { sentences =>
         val languageDetector = new LanguageDetector()
