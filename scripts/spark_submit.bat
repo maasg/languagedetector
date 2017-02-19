@@ -32,4 +32,4 @@ if not exist %LOG_DIR% mkdir %LOG_DIR%
 if not exist \tmp\spark-events mkdir \tmp\spark-events
 
 rem add the dependencies to the class path using "--driver-class-path" otherwise the guava lib v14.0 from spark is taken while languagedetect needs >= 18.0
-%SPARK_HOME%\bin\spark-submit --jars %APP_ENV_DIR%\%APP_NAME%-deps.jar --class biz.meetmatch.%CLASS% --driver-memory 1g --driver-java-options '-Dconfig.file=%APP_CONFIG%' --driver-java-options '-DbusinessLogFileName=%LOG_DIR%\%BUSLOGFILE%' --driver-class-path %APP_ENV_DIR%\%APP_NAME%-deps.jar %APP_ENV_DIR%\%APP_NAME%.jar %REMAINING_ARGS% > %LOG_DIR%\%LOGFILE%
+%SPARK_HOME%\bin\spark-submit --jars %APP_ENV_DIR%\%APP_NAME%-deps.jar --class biz.meetmatch.%CLASS% --driver-memory 1g --driver-java-options -Dconfig.file=%APP_CONFIG:\=/% --driver-class-path %APP_ENV_DIR%\%APP_NAME%-deps.jar %APP_ENV_DIR%\%APP_NAME%.jar %REMAINING_ARGS% > %LOG_DIR%\%LOGFILE%
