@@ -24,6 +24,13 @@ cp src/main/resources/test.conf ${APP_DIR}/test/
 nano ${APP_DIR}/test/test.conf
 ```
 
+```
+call settings.bat
+mkdir %APP_DIR%\test
+copy src\main\resources\test.conf %APP_DIR%\test
+start notepad "%APP_DIR%\test\test.conf"
+```
+
 If you haven't changed the settings in the two previous steps all files (binaries, data and logs) will be created under ~/my_workspace and may be deleted when you're done. 
 
 ### usage
