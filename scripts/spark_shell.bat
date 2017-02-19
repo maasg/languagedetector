@@ -16,4 +16,4 @@ set LOG_DIR=%APP_ENV_DIR%\logs
 if not exist %LOG_DIR% mkdir %LOG_DIR%
 set BUSLOGFILE=businessLog_spark_shell.log
 
-%SPARK_HOME%\bin\spark-shell --driver-memory 1g --driver-java-options '-Dconfig.file=%APP_CONFIG%' --jars c:%APP_ENV_DIR%\%APP_NAME%.jar,c:%APP_ENV_DIR%\%APP_NAME%-deps.jar -i %~dp0\spark_shell_init.scala
+%SPARK_HOME%\bin\spark-shell --driver-memory 1g --driver-java-options -Dconfig.file=%APP_CONFIG:\=/% --driver-class-path %APP_ENV_DIR%\%APP_NAME%.jar;%APP_ENV_DIR%\%APP_NAME%-deps.jar -i %~dp0\spark_shell_init.scala
