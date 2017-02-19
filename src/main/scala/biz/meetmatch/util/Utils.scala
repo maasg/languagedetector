@@ -63,7 +63,7 @@ object Utils {
   }
 
   def getParquetRoot: String = {
-    s"${Utils.getConfig("spark.content")}/parquet"
+    s"${Utils.getConfig("languagedetector.dir")}/data/parquet"
   }
 
   def loadParquetFile(path: String, setJobDescription: Boolean = true)(implicit sparkSession: SparkSession): DataFrame = {
@@ -91,7 +91,7 @@ object Utils {
   }
 
   def getTextFileRoot: String = {
-    s"${Utils.getConfig("spark.content")}/text"
+    s"${Utils.getConfig("languagedetector.dir")}/data/text"
   }
 
   def saveAsTextFile[T](rdd: RDD[String], path: String): Unit = {

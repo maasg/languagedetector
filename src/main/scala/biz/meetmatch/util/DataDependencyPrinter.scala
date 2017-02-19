@@ -126,7 +126,7 @@ object DataDependencyPrinter {
 
     val json = s"""{"nodes": [ $nodes ], "edges": [ $edges ] }"""
 
-    val path = Utils.getConfig("spark.content") + "/text/data-dependencies.json"
+    val path = Utils.getTextFileRoot + "/data-dependencies.json"
     val file = new File(path)
 
     FileUtils.forceMkdir(file.getParentFile)
