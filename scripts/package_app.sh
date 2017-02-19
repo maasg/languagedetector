@@ -3,7 +3,7 @@ set -e
 
 . $(dirname $0)/../settings.sh
 
-echo "Executing 'sbt package'..."
+echo "Creating package..."
 cd $SOURCE_DIR
 sbt package
 cd -

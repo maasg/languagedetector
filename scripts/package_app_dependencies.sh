@@ -3,7 +3,7 @@ set -e
 
 . $(dirname $0)/../settings.sh
 
-echo "Executing 'sbt assemblyPackageDependency'..."
+echo "Creating package for dependencies..."
 cd $SOURCE_DIR
 sbt assemblyPackageDependency
 cd -
