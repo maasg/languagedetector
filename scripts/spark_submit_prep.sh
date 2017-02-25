@@ -7,7 +7,7 @@ if [ -z "$ENV" ]; then
     echo "You didn't specify the environment."
     exit 1
 fi
-
+echo "environment => ${ENV}"
 . $(dirname $0)/../settings.sh
 
 CLASS=$2
