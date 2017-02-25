@@ -17,11 +17,11 @@ if [ -z "$APP_VERSION" ]; then
     exit 1
 fi
 
-APP_ENV_DIR=$APP_DIR/$ENV
-echo "Deploying $APP_NAME $APP_VERSION to $APP_ENV_DIR..."
+APP_ENV_DIR=${APP_DIR}/${ENV}
+echo "Deploying ${APP_NAME} ${APP_VERSION} to ${APP_ENV_DIR}..."
 mkdir -p ${APP_ENV_DIR}
-mv $SOURCE_DIR/target/scala-2.11/$APP_NAME_2.11-${APP_VERSION}.jar ${APP_ENV_DIR}
-ln -sfn ${APP_ENV_DIR}/$APP_NAME_2.11-${APP_VERSION}.jar ${APP_ENV_DIR}/$APP_NAME.jar
+cp ${SOURCE_DIR}/target/scala-2.11/${APP_NAME}_2.11-${APP_VERSION}.jar ${APP_ENV_DIR}
+ln -sfn ${APP_ENV_DIR}/${APP_NAME}_2.11-${APP_VERSION}.jar ${APP_ENV_DIR}/${APP_NAME}.jar
 
 # note: in a real world scenario the package would be downloaded from a corporate repository instead of taking it from a local path
 
