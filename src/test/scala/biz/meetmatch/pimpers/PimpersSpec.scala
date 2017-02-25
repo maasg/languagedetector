@@ -5,6 +5,8 @@ import biz.meetmatch.util.CollectionPimpers
 import org.slf4j.LoggerFactory
 
 class PimpersSpec extends UnitSpec {
+  private val logger = LoggerFactory.getLogger(this.getClass)
+
   it should "take a top of a collection" in {
     import CollectionPimpers._
 
@@ -19,6 +21,4 @@ class PimpersSpec extends UnitSpec {
     reverseTop10Par should have length 5
     reverseTop10Par.head should be((100, 100))
   }
-
-  private val logger = LoggerFactory.getLogger(this.getClass)
 }

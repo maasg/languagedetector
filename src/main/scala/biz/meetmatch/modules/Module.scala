@@ -45,6 +45,8 @@ abstract class StreamingModule(sparkPort: Int) {
 }
 
 trait ParquetExtensions[T] {
+  private val logger = LoggerFactory.getLogger(this.getClass)
+
   val parquetFile: String
 
   def saveResultsToParquet(ds: Dataset[T])(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Unit = {
@@ -118,6 +120,4 @@ trait ParquetExtensions[T] {
           None
       }
   }
-
-  private val logger = LoggerFactory.getLogger(this.getClass)
 }

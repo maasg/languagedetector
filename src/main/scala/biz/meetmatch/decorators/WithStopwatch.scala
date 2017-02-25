@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.duration.Duration
 
 object WithStopwatch {
+  private val logger = LoggerFactory.getLogger(this.getClass)
+
   def apply[B](f: => B): B = {
     apply("")(f)
   }
@@ -24,6 +26,4 @@ object WithStopwatch {
 
     result
   }
-
-  private val logger = LoggerFactory.getLogger(this.getClass)
 }

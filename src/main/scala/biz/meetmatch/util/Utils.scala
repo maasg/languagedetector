@@ -18,7 +18,8 @@ import scala.concurrent.duration.{Duration, FiniteDuration}
 import scala.language.experimental.macros
 
 object Utils {
-  val cf: Config = ConfigFactory.load("local").withFallback(ConfigFactory.load())
+  private val logger = LoggerFactory.getLogger(this.getClass)
+  private val cf: Config = ConfigFactory.load("local").withFallback(ConfigFactory.load())
 
   def getFiltersFromCLI(args: Array[String]): Scallop = {
     Scallop(args)
@@ -178,7 +179,5 @@ object Utils {
     val dimension = Math.pow(10, precision)
     Math.round(double * dimension) / dimension
   }
-
-  private val logger = LoggerFactory.getLogger(this.getClass)
 }
 
