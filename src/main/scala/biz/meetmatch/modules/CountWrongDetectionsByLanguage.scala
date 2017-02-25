@@ -28,9 +28,9 @@ object CountWrongDetectionsByLanguage extends Module with ParquetExtensions[Wron
     sparkSession.sparkContext.setJobDescription("Count the wrong detections by language")
     sentenceDS
       .filter(sentence => sentence.detectedLanguage != sentence.actualLanguage)
-      .groupByKey(sentence => (sentence.actualLanguage, sentence.detectedLanguage))
+      .groupByKey(sentence => sentence.actualLanguage)
       .count
-      .map { case ((language, detectedLanguage), count) => WrongDetectionByLanguage(language, detectedLanguage, count) }
+      .map { case (detectedLanguage, count) => WrongDetectionByLanguage(detectedLanguage, count) }
   }
 
   def loadResultsFromParquet(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Dataset[WrongDetectionByLanguage] = {

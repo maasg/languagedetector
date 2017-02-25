@@ -1,3 +1,3 @@
 package biz.meetmatch.model
 
-case class WrongDetectionByLanguage(actualLanguage: String, detectedLanguage: String, count: Long)
+case class WrongDetectionByLanguage(detectedLanguage: String, count: Long)
