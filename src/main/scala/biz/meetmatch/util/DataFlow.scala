@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
-object DataDependencyPrinter {
+object DataFlow {
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   val modulesPkg = "biz.meetmatch.modules"
@@ -126,7 +126,7 @@ object DataDependencyPrinter {
 
     val json = s"""{"nodes": [ $nodes ], "edges": [ $edges ] }"""
 
-    val path = Utils.getTextFileRoot + "/data-dependencies.json"
+    val path = Utils.getTextFileRoot + "/data-flow.json"
     val file = new File(path)
 
     FileUtils.forceMkdir(file.getParentFile)
@@ -135,7 +135,7 @@ object DataDependencyPrinter {
       FileUtils.forceDelete(file)
 
     Files.write(Paths.get(path), json.getBytes(StandardCharsets.UTF_8))
-    println("The data dependencies were exported to " + path)
+    println("The data flow was exported to " + path)
   }
 
   def printModuleDependenciesForNeo4j(): Unit = {
