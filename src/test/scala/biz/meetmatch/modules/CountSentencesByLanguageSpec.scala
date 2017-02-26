@@ -4,7 +4,7 @@ import biz.meetmatch.UnitWithSparkSpec
 import biz.meetmatch.model.Sentence
 
 class CountSentencesByLanguageSpec extends UnitWithSparkSpec {
-  it should "detect the language of the sentences" in {
+  it should "count the sentences by language" in {
     val sqlC = sparkSession
     import sqlC.implicits._
 

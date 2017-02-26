@@ -1,10 +1,11 @@
 name := "languagedetector"
 
 version := "1.0"
-val build = "need new build"
 
 scalaVersion := "2.11.8"
 val sparkVersion = "2.1.0"
+
+conflictManager := ConflictManager.latestRevision
 
 //spark
 libraryDependencies += "org.apache.spark" %% "spark-core" % sparkVersion % Provided
@@ -32,7 +33,7 @@ libraryDependencies += "org.scalaj" %% "scalaj-http" % "2.3.0"
 
 libraryDependencies += "org.reflections" % "reflections" % "0.9.10"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % Test // weird vtable issue when using 3.0.1 (2.2.6 seems to be also secretly loaded by intellij which causes a version conflict in BeforeAndAfterAll)
 
 javaOptions in Test += "-Dconfig.resource=test.conf"
 
