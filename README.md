@@ -160,7 +160,7 @@ Scripts exist to easily start a remote debugging or VisualVM monitoring session.
 
 ##### debugging
 ```bash
-scripts/spark_submit_with_debugging test modules.DetectLanguage --file datasets/sentences.tsv
+scripts/spark_submit_with_debugging.sh test modules.DetectLanguage --file datasets/sentences.tsv
 ```
 
 When using IntelliJ you can then connect to the remote session by running a configuration of type "Remote":
@@ -168,13 +168,13 @@ When using IntelliJ you can then connect to the remote session by running a conf
 
 ##### monitoring
 ```bash
-scripts/spark_submit_with_monitoring test modules.DetectLanguage --file datasets/sentences.tsv
+scripts/spark_submit_with_monitoring.sh test modules.DetectLanguage --file datasets/sentences.tsv
 ```
 
 When using VisualVM you can add a JMX connection to your_server:8090 while the spark application is running:
 ![alt text](https://github.com/tolomaus/languagedetector/blob/master/docs/monitoring.png "monitoring")
 
-Note: make sure to modify the HOSTNAME in the script to your needs
+Note: make sure to modify the HOSTNAME in the ```spark_submit_with_monitoring.sh``` script to your needs
 
 ### online platform
 Most of the time you will want to make the results of the heavy data processing available to your end users. The language detector UI shows how you can do this. It consists of a Play/scala web application and an Angular.js front end. At the moment it will directly read the parquet files that were generated from Spark for each request, but a more scalable solution could be to either cache the parquet data in memory (if the dataset fits in memory) or to use an intermediary database (e.g. Cassandra if you have key-based data retrieval)
