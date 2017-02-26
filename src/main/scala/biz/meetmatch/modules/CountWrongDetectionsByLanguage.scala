@@ -28,7 +28,7 @@ object CountWrongDetectionsByLanguage extends Module with ParquetExtensions[Wron
     sparkSession.sparkContext.setJobDescription("Count the wrong detections by language")
     sentenceDS
       .filter(sentence => sentence.detectedLanguage != sentence.actualLanguage)
-      .groupByKey(sentence => sentence.actualLanguage)
+      .groupByKey(sentence => sentence.detectedLanguage)
       .count
       .map { case (detectedLanguage, count) => WrongDetectionByLanguage(detectedLanguage, count) }
   }
