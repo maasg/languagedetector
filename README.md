@@ -180,9 +180,11 @@ Note: make sure to modify the HOSTNAME in the ```spark_submit_with_monitoring.sh
 Most of the time you will want to make the results of the heavy data processing available to your end users. The language detector UI shows how you can do this. It consists of a Play/scala web application and an Angular.js front end. At the moment it will directly read the parquet files that were generated from Spark for each request, but a more scalable solution could be to either cache the parquet data in memory (if the dataset fits in memory) or to use an intermediary database (e.g. Cassandra if you have key-based data retrieval)
 
 Interactive use of the model:
+
 ![alt text](https://github.com/tolomaus/languagedetector/blob/master/docs/language-detection.png "language-detection")
 
 Analytics:
+
 ![alt text](https://github.com/tolomaus/languagedetector/blob/master/docs/language-detection-analytics.png "language-detection-analytics")
 
 ### application-focused logging
