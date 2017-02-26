@@ -143,7 +143,7 @@ Thanks to the separation between the side effects and the pure logic it becomes 
 ### Environment segregation
 Information that is specific to an environment like cpu settings, passwords, filesystem locations, etc is kept in environment-specific config files. When an application is executed, it is important to pass the config file that applies to the correct environment.
 
-### ackaging and deployment
+### Packaging and deployment
 Scipts exist to package the application and its dependencies into jar files and to deploy them to a specific environment. 
 ```bash
 scripts/package_app.sh # the version is currently set to 1.0 in the build.sbt
