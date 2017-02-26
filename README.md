@@ -8,18 +8,18 @@ The main purpose of this repo however, is to offer a foundation that contains al
 1] install Apache Spark 2.1.0 from http://spark.apache.org/downloads.html (you can use a different version if you also modify the sparkVersion accordingly in the [build.sbt](https://github.com/tolomaus/languagedetector/tree/master/build.sbt)). Windows is also supported but takes a little more effort to set up. See https://jaceklaskowski.gitbooks.io/mastering-apache-spark/content/spark-tips-and-tricks-running-spark-windows.html for more details.
 
 2] clone this repo
-```shell
+```bash
 git clone https://github.com/tolomaus/languagedetector.git
 cd languagedetector
 ```
 
 3] (optional) modify the environment variables from [settings.sh](https://github.com/tolomaus/languagedetector/tree/master/settings.sh) to your needs
-```shell
+```bash
 nano settings.sh
 ```
 
 4] copy (and if necessary modify) the environment specific test.conf file:
-```shell
+```bash
 . settings.sh
 mkdir -p ${APP_DIR}/test
 cp src/main/resources/test.conf ${APP_DIR}/test/
@@ -27,7 +27,7 @@ nano ${APP_DIR}/test/test.conf
 ```
 
 On Windows:
-```
+```script
 call settings.bat
 mkdir %APP_DIR%\test
 copy src\main\resources\test.conf %APP_DIR%\test
@@ -40,7 +40,7 @@ If you haven't changed the settings in the two previous steps all files (binarie
 
 OK now that we have set it all up let's have a look at how we can detect the languages of a text file containing sentences in different languages. We are going to assume that we're in the test environment.
 
-```shell
+```bash
 # package and deploy the spark app dependencies
 scripts/package_app_dependencies.sh # only run this when the dependencies have changed
 scripts/deploy_app_dependencies.sh test 1.0 # only run this when the dependencies have changed
