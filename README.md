@@ -173,6 +173,7 @@ scripts/spark_submit_with_monitoring test modules.DetectLanguage --file datasets
 
 When using VisualVM you can add a JMX connection to your_server:8090 while the spark application is running:
 ![alt text](https://github.com/tolomaus/languagedetector/blob/master/docs/monitoring.png "monitoring")
+
 Note: make sure to modify the HOSTNAME in the script to your needs
 
 ### online platform
