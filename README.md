@@ -5,7 +5,9 @@ The main purpose of this repo however, is to offer a foundation that contains al
 
 ## Quick start
 ### set up
-1] install Apache Spark 2.1.0 from http://spark.apache.org/downloads.html (you can use a different version if you also modify the sparkVersion accordingly in the [build.sbt](https://github.com/tolomaus/languagedetector/tree/master/build.sbt)). Windows is also supported but takes a little more effort to set up. See https://jaceklaskowski.gitbooks.io/mastering-apache-spark/content/spark-tips-and-tricks-running-spark-windows.html for more details.
+1] install Apache Spark 2.1.0 from http://spark.apache.org/downloads.html (you can use a different version if you also modify the sparkVersion accordingly in the [build.sbt](https://github.com/tolomaus/languagedetector/tree/master/build.sbt)). 
+
+Windows is also supported but takes a little more effort to set up. See https://jaceklaskowski.gitbooks.io/mastering-apache-spark/content/spark-tips-and-tricks-running-spark-windows.html for more details.
 
 2] clone this repo
 ```bash
@@ -169,8 +171,9 @@ When using IntelliJ you can then connect to the remote session by running a conf
 scripts/spark_submit_with_monitoring test modules.DetectLanguage --file datasets/sentences.tsv
 ```
 
-When using VisualVM you can add a JMX connection to <your_server>:8090 while the spark application is running:
+When using VisualVM you can add a JMX connection to your_server:8090 while the spark application is running:
 ![alt text](https://github.com/tolomaus/languagedetector/blob/master/docs/monitoring.png "monitoring")
+Note: make sure to modify the HOSTNAME in the script to your needs
 
 ### online platform
 Most of the time you will want to make the results of the heavy data processing available to your end users. The language detector UI shows how you can do this. It consists of a Play/scala web application and an Angular.js front end. At the moment it will directly read the parquet files that were generated from Spark for each request, but a more scalable solution could be to either cache the parquet data in memory (if the dataset fits in memory) or to use an intermediary database (e.g. Cassandra if you have key-based data retrieval)
