@@ -18,4 +18,4 @@ mkdir -p ${LOG_DIR}
 BUSLOGFILE=businessLog_spark_shell.log
 touch ${LOG_DIR}/${BUSLOGFILE}
 
-${SPARK_HOME}/bin/spark-shell --driver-memory 1g --driver-java-options "-Dconfig.file=${APP_CONFIG}" --jars ${APP_ENV_DIR}/${APP_NAME}.jar,${APP_ENV_DIR}/${APP_NAME}-deps.jar -i $(dirname $0)/spark_shell_init.scala
+${SPARK_HOME}/bin/spark-shell --driver-memory 1g --driver-java-options "-Dconfig.file=${APP_CONFIG} -DbusinessLogFileName=${LOG_DIR}/${BUSLOGFILE}" --jars ${APP_ENV_DIR}/${APP_NAME}.jar,${APP_ENV_DIR}/${APP_NAME}-deps.jar -i $(dirname $0)/spark_shell_init.scala
