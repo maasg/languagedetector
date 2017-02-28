@@ -50,6 +50,10 @@ trait ParquetExtensions[T] {
   val parquetFile: String
 
   def saveResultsToParquet(ds: Dataset[T])(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Unit = {
+    saveResultsToParquetAsDF(ds.toDF)
+  }
+
+  def saveResultsToParquetAsDF(df: DataFrame)(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Unit = {
     val parquetFileTemp = parquetFile + ".inprogress"
 
     if (Utils.existsParquetFile(parquetFileTemp))
@@ -57,7 +61,7 @@ trait ParquetExtensions[T] {
 
     logger.debug(s"Saving $parquetFile to a temporary parquet file $parquetFileTemp...")
     try {
-      Utils.saveAsParquetFile(ds, parquetFileTemp)
+      Utils.saveAsParquetFile(df, parquetFileTemp)
     } catch {
       case e: Exception =>
         logger.error(s"An error occurred while saving the temporary parquet file, leaving the original parquet file $parquetFile untouched.")

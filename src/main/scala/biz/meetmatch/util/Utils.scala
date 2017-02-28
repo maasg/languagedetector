@@ -71,7 +71,7 @@ object Utils {
     sparkSession.sparkContext.setJobDescription(s"Load parquet file - $path (meta data only)")
     sparkSession.read.load(s"$getParquetRoot/$path")
   }
-
+  
   def saveAsParquetFile[T](ds: Dataset[T], path: String): Unit = {
     ds.write.mode(SaveMode.Overwrite).save(s"$getParquetRoot/$path")
   }

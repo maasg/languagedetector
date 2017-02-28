@@ -1,7 +1,7 @@
 package biz.meetmatch.modules
 
 import biz.meetmatch.UnitWithSparkSpec
-import biz.meetmatch.model.Sentence
+import biz.meetmatch.model.{Sentence, WrongDetectionByLanguage}
 
 class CountWrongDetectionsByLanguageSpec extends UnitWithSparkSpec {
   it should "count the wrong detections of the sentences by language" in {
@@ -15,7 +15,7 @@ class CountWrongDetectionsByLanguageSpec extends UnitWithSparkSpec {
       Sentence("Par contre, ça c'est une texte ecrit en Français", actualLanguage = "fr", detectedLanguage = "fr")
     ).toDS
 
-    val wrongDetections = CountWrongDetectionsByLanguage.calc(sentenceDS).collect
+    val wrongDetections = CountWrongDetectionsByLanguage.calc(sentenceDS).as[WrongDetectionByLanguage].collect
 
     wrongDetections should have length 1
     wrongDetections.find(_.detectedLanguage == "nl").map(_.count) should be(Some(1))
