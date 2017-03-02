@@ -8,7 +8,6 @@ import java.util.{Calendar, Date}
 import biz.meetmatch.logging.BusinessSparkListener
 import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.commons.io.FileUtils
-import org.apache.spark.rdd.RDD
 import org.apache.spark.sql._
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.rogach.scallop.Scallop
@@ -95,17 +94,15 @@ object Utils {
     s"${Utils.getConfig("languagedetector.dir")}/data/text"
   }
 
-  def saveAsTextFile[T](rdd: RDD[String], path: String): Unit = {
+  def saveAsTextFile[T](ds: Dataset[String], path: String): Unit = {
     val absolutePath = new File(s"$getTextFileRoot/$path")
     if (absolutePath.exists) FileUtils.deleteDirectory(absolutePath)
 
-    rdd.saveAsTextFile(s"$getTextFileRoot/$path")
+    ds.write.text(s"$getTextFileRoot/$path")
   }
 
   def loadTextFileAbs(path: String)(implicit sparkSession: SparkSession): Dataset[String] = {
-    import sparkSession.implicits._
-
-    sparkSession.sparkContext.textFile(path).toDS
+    sparkSession.read.textFile(path)
   }
 
   def loadTextFile(path: String)(implicit sparkSession: SparkSession): Dataset[String] = {
