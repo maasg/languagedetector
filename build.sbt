@@ -1,5 +1,7 @@
 name := "languagedetector"
 
+organization := "tolomaus"
+
 version := "1.0"
 
 scalaVersion := "2.11.8"
