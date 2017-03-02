@@ -26,10 +26,10 @@ object CountSentencesByLanguage extends Module with ParquetExtensions[SentenceCo
     sparkSession.sparkContext.setJobGroup(this.getClass.getName, this.getClass.getName)
 
     sparkSession.sparkContext.setJobDescription("Count the sentences by language")
-    sentenceDS
-      .groupByKey(_.detectedLanguage)
-      .count
-      .map { case (language, count) => SentenceCountByLanguage(language, count) }
+
+    // TASK 2: count how many sentences exist for each detected language and save the results in the SentenceCountByLanguage case class
+
+    ???
   }
 
   def loadResultsFromParquet(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Dataset[SentenceCountByLanguage] = {

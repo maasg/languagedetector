@@ -32,14 +32,12 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
     sparkSession.sparkContext.setJobDescription("Detect the language of the text")
     textDS
       .repartition(Utils.getDefaultNumPartitions)
-      .map(line => line.split("\t"))
-      .mapPartitions { sentences =>
-        val languageDetector = new LanguageDetector()
 
-        sentences.map { case Array(sentence, language) =>
-          Sentence(sentence, language, languageDetector.detectLanguage(sentence))
-        }
-      }
+      // TASK 1:
+      //  - split up the lines of the textDS dataset into separate parts - see datasets/sentences.tsv for the formatting (it also contains the actual langaue of the text that we want to use later to verify the detected language)
+      //  - use the LanguageDetector() to translate the sentence and store the results in the Sentence case class
+
+      ???
   }
 
   def loadInputTextFromFile(path: String)(implicit sparkSession: SparkSession): Dataset[String] = {
