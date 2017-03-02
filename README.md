@@ -6,7 +6,7 @@ The main purpose of this repo however, is to offer a foundation that contains al
 
 ## Quick start
 ### set up
-0] make sure you have a jdk, sbt and git installed
+0] make sure you have jdk 1.8, sbt and git installed
 
 1] install Apache Spark 2.1.0 from http://spark.apache.org/downloads.html (you can use a different version if you also modify the sparkVersion accordingly in the [build.sbt](https://github.com/tolomaus/languagedetector/tree/master/build.sbt)). 
 
