@@ -147,11 +147,12 @@ The logic with the side effects (mostly the loading of the input datasets and th
 Thanks to the separation between the side effects and the pure logic it becomes simple to unit test the logic. It suffices to create custom test data in each unit test, call the ```calc``` method and check the validity of the results
 
 
-### Environment segregation
+### Operability
+##### environment segregation
 Information that is specific to an environment like cpu settings, passwords, filesystem locations, etc is kept in environment-specific config files. When an application is executed, it is important to pass the config file that applies to the correct environment.
 
 
-### Packaging and deployment
+##### packaging and deployment
 Scipts exist to package the application and its dependencies into jar files and to deploy them to a specific environment. 
 ```bash
 scripts/package_app.sh # the version is currently set to 1.0 in the build.sbt
@@ -163,30 +164,6 @@ The application can then be submitted to Spark by executing the ```spark_submit.
 scripts/spark_submit.sh test modules.DetectLanguage --file datasets/sentences.tsv # run one module
 scripts/spark_submit.sh test workflow.Workflow --file datasets/sentences.tsv # run a workflow consisting of one or more modules
 ```
-
-
-### Remote debugging and monitoring
-Scripts exist to easily start a remote debugging or VisualVM monitoring session.
-
-##### debugging
-```bash
-scripts/spark_submit_with_debugging.sh test modules.DetectLanguage --file datasets/sentences.tsv
-```
-
-When using IntelliJ you can then connect to the remote session by running a configuration of type "Remote":
-
-![alt text](https://github.com/tolomaus/languagedetector/blob/master/docs/debugging.png "debugging")
-
-##### monitoring
-```bash
-scripts/spark_submit_with_monitoring.sh test modules.DetectLanguage --file datasets/sentences.tsv
-```
-
-When using VisualVM you can add a JMX connection to your_server:8090 while the spark application is running:
-
-![alt text](https://github.com/tolomaus/languagedetector/blob/master/docs/monitoring.png "monitoring")
-
-Note: make sure to modify the HOSTNAME in the ```spark_submit_with_monitoring.sh``` script to your needs
 
 
 ### Online platform
@@ -217,4 +194,29 @@ The data flow between the modules is derived automatically and can be consulted 
 ![alt text](https://github.com/tolomaus/languagedetector/blob/master/docs/data-flow.png "data-flow")
 
 Make sure to export the data flow first by executing ```scripts/export_data_flow.sh```.
+
+
+### Troubleshooting
+##### remote debugging
+A script exists to easily start a remote debugging session:
+```bash
+scripts/spark_submit_with_debugging.sh test modules.DetectLanguage --file datasets/sentences.tsv
+```
+
+When using IntelliJ you can then connect to the remote session by running a configuration of type "Remote":
+
+![alt text](https://github.com/tolomaus/languagedetector/blob/master/docs/debugging.png "debugging")
+
+##### remote monitoring
+A script exist to easily start a VisualVM monitoring session:
+```bash
+scripts/spark_submit_with_monitoring.sh test modules.DetectLanguage --file datasets/sentences.tsv
+```
+
+In VisualVM you can add a JMX connection to your_server:8090 while the spark application is running:
+
+![alt text](https://github.com/tolomaus/languagedetector/blob/master/docs/monitoring.png "monitoring")
+
+Note: make sure to modify the HOSTNAME in the ```spark_submit_with_monitoring.sh``` script to your needs.
+
 
