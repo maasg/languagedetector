@@ -146,6 +146,19 @@ The logic with the side effects (mostly the loading of the input datasets and th
 ##### unit testing
 Thanks to the separation between the side effects and the pure logic it becomes simple to unit test the logic. It suffices to create custom test data in each unit test, call the ```calc``` method and check the validity of the results
 
+```scala
+class DetectLanguageSpec extends UnitWithSparkSpec {
+  it should "detect the language of the sentences" in {
+    val sqlC = sparkSession
+    import sqlC.implicits._
+
+    val textDS = Seq("nl\tDit is een Nederlandstalige tekst").toDS
+    val sentences = DetectLanguage.calc(textDS).collect
+    sentences should have length 1
+    sentences(0).detectedLanguage should be("nl")
+  }
+}
+```
 
 ### Operability
 ##### environment segregation
