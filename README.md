@@ -160,7 +160,7 @@ class DetectLanguageSpec extends UnitWithSparkSpec {
 }
 ```
 
-### Operability
+### Delivery
 ##### environment segregation
 Information that is specific to an environment like cpu settings, passwords, filesystem locations, etc is kept in environment-specific config files. When an application is executed, it is important to pass the config file that applies to the correct environment.
 
