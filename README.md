@@ -1,7 +1,7 @@
 # Language detector
 This repo contains an Apache Spark application that can detect the language of a text, sentence by sentence. See also [its companion repo](https://github.com/tolomaus/languagedetector_ui.git) which contains a Play application that allows to detect the language of a text that is entered by the user. 
 
-The main purpose of this repo however, is to offer a foundation that contains all the necessary bits and pieces to put machine learning models such as this language detector into production usage. Concerns like logging, unit testing, debugging, environment segregation, packaging and deployment are of critical importance to the long term maintainability of your solution and really have to be taken into account from the early start.   
+The main purpose of this repo however, is to offer a foundation that contains all the necessary bits and pieces to put machine learning models such as this language detector into production usage. Concerns like logging, unit testing, debugging, environment segregation, packaging and deployment are of critical importance to the long term maintainability of your solution and really have to be taken into account from the early start. This repo aims to give you a head start with all of these concerns
 
 
 ## Quick start
