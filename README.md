@@ -5,7 +5,7 @@ The main purpose of this repo however, is to offer a foundation that contains al
 
 
 ## Quick start
-### set up
+### setup
 0] make sure you have jdk 1.8, sbt and git installed
 
 1] install Apache Spark 2.1.0 from http://spark.apache.org/downloads.html (you can use a different version if you also modify the sparkVersion accordingly in the [build.sbt](https://github.com/tolomaus/languagedetector/tree/master/build.sbt)). 
@@ -46,10 +46,10 @@ Note: if you haven't changed the settings in the two previous steps all files (b
 
 
 ### usage
-
 OK now that we have set it all up let's have a look at how we can detect the languages of a text file containing sentences in different languages. We are going to assume that we're in the test environment.
 
 ```bash
+# mac/linux
 # package and deploy the spark app dependencies
 scripts/package_app_dependencies.sh # only run this when the dependencies have changed
 scripts/deploy_app_dependencies.sh test 1.0 # only run this when the dependencies have changed
@@ -71,9 +71,10 @@ scripts/spark_shell.sh test # this script uses the settings from ${APP_DIR}/conf
 scala> DetectLanguage.loadResultsFromParquet.collect # will return an array of Sentence(content: String, language: String)
 scala> CountSentencesByLanguage.loadResultsFromParquet.collect # will return an array of SentenceCountByLanguage(language: String, count: Long)
 scala> CountWrongDetectionsByLanguage.loadResultsFromParquet.collect # will return an array of WrongDetectionByLanguage(detectedLanguage: String, count: Long)
+
+# windows: replace the script extensions in the above lines from *.sh to *.bat
 ```
 
-On windows replace ```*.sh``` with ```*.bat```.
 
 ## Documentation
 The work is not finished when your code runs correctly in the notebook. You still have to put it into your end user's hands before you can actually get any value from it.  

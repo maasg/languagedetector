@@ -30,7 +30,11 @@ object CountWrongDetectionsByLanguage extends Module with ParquetExtensions[Wron
     // TASK 3: count how many wrongly detected sentences exist for each detected language and save the results in the WrongDetectionByLanguage case class
     // use the Dataset api
 
-    // TASK 3b (optional): now start up the language detector UI web application and consult the verify the results on the language detector analytics page
+    // when finished coding:
+    // - package, deploy and submit the spark application and verify the results using spark shell or a notebook (see https://github.com/tolomaus/languagedetector section Quick start - usage)
+    // - verify the logs of the executed module in the language detector UI
+
+    // now consult the results on the language detector analytics page in the language detector UI
 
     ???
   }

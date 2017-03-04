@@ -37,8 +37,9 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
       //  - split up the lines of the textDS dataset into separate parts - see datasets/sentences.tsv for the formatting (it also contains the actual language of the text that we want to use later to verify the detected language)
       //  - use the LanguageDetector() to translate the sentence and store the results in the Sentence case class
 
-      // when finished coding: package, deploy and submit the spark application (see https://github.com/tolomaus/languagedetector section Quick start - usage)
-      // then verify the results using the Spark shell or a notebook
+      // when finished coding:
+      // - package, deploy and submit the spark application and verify the results using spark shell or a notebook (see https://github.com/tolomaus/languagedetector section Quick start - usage)
+      // - verify the logs of the executed module in the language detector UI
 
       ???
   }
