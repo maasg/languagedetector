@@ -29,6 +29,9 @@ object CountSentencesByLanguage extends Module with ParquetExtensions[SentenceCo
 
     // TASK 2: count how many sentences exist for each detected language and save the results in the SentenceCountByLanguage case class
 
+    // when finished coding: package, deploy and submit the spark application (see https://github.com/tolomaus/languagedetector section Quick start - usage)
+    // then verify the results using the Spark shell or a notebook
+
     ???
   }
 

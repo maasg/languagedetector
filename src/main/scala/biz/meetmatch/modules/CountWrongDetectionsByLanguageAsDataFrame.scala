@@ -30,7 +30,10 @@ object CountWrongDetectionsByLanguageAsDataFrame extends Module with ParquetExte
     // TASK 4: count how many wrongly detected sentences exist for each detected language and save the results in the WrongDetectionByLanguage case class
     // use the DataFrame api
 
-    // TASK 4b (advanced): now have a look at the job details in the Spark UI and verify that the dataframe API has optimized its parquet query
+    // when finished coding: package, deploy and submit the spark application (see https://github.com/tolomaus/languagedetector section Quick start - usage)
+    // then verify the results using the Spark shell or a notebook
+
+    // TASK 4b (advanced): now have a look at the job details in the Spark UI and verify that the dataframe API has optimized its parquet query (as opposed to the dataset api from TASK 3)
     // make sure you have started the Spark History Server: ${SPARK_HOME}/sbin/start-history-server.sh
 
     ???
