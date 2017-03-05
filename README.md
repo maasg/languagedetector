@@ -205,8 +205,6 @@ A section is available for each of the executed modules that shows the Spark job
 
 For each job links exist that will take you to the details of the job in the Spark UI. If you want to use these links after the Spark session has ended make sure to start up the Spark History Server daemon: ```${SPARK_HOME}/sbin/start-history-server.sh```. 
 
-Note: the application focused logging doesn't work on Windows.
-
 
 ### Data flow
 The data flow between the modules is derived automatically and can be consulted in the language detector UI:
