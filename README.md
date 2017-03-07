@@ -72,7 +72,8 @@ scala> DetectLanguage.loadResultsFromParquet.collect # will return an array of S
 scala> CountSentencesByLanguage.loadResultsFromParquet.collect # will return an array of SentenceCountByLanguage(language: String, count: Long)
 scala> CountWrongDetectionsByLanguage.loadResultsFromParquet.collect # will return an array of WrongDetectionByLanguage(detectedLanguage: String, count: Long)
 
-# windows: replace the script extensions in the above lines from *.sh to *.bat
+# windows: replace the script extensions in the above lines from *.sh to *.bat and the slashes to backslashes
+# note: ignore the spark ﻿error "Exception while deleting Spark temp dir" at the end of the spark_submit
 ```
 
 
