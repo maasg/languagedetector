@@ -27,7 +27,7 @@ object CountWrongDetectionsByLanguageAsDataFrame extends Module with ParquetExte
 
     sparkSession.sparkContext.setJobDescription("Count the wrong detections by language")
 
-    // TASK 4: count how many wrongly detected sentences exist for each detected language and save the results in the WrongDetectionByLanguage case class
+    // TASK 4: count how many wrongly detected sentences exist for each detected language and save the results with field names "detectedLanguage" and "count"
     // use the DataFrame api
 
     // when finished coding:
