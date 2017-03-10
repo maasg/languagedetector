@@ -37,7 +37,12 @@ object CountWrongDetectionsByLanguageAsDataFrame extends Module with ParquetExte
     // (advanced) now have a look at the job details in the Spark UI and verify that the dataframe API has optimized its parquet query (as opposed to the dataset api from TASK 3)
     // make sure you have started the Spark History Server: ${SPARK_HOME}/sbin/start-history-server.sh then go to localhost:18080
 
-    ???
+    // solution:
+    sentenceDS
+      .filter($"detectedLanguage" =!= $"actualLanguage")
+      .groupBy($"detectedLanguage")
+      .count
+      .select("detectedLanguage", "count")
   }
 
   def loadResultsFromParquet(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Dataset[WrongDetectionByLanguage] = {

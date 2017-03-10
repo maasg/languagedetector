@@ -33,7 +33,11 @@ object CountSentencesByLanguage extends Module with ParquetExtensions[SentenceCo
     // - package, deploy and submit the spark application and verify the results using spark shell or a notebook (see https://github.com/tolomaus/languagedetector section Quick start - usage)
     // - verify the logs of the executed module in the language detector UI
 
-    ???
+    // solution:
+    sentenceDS
+      .groupByKey(_.detectedLanguage)
+      .count
+      .map { case (language, count) => SentenceCountByLanguage(language, count) }
   }
 
   def loadResultsFromParquet(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Dataset[SentenceCountByLanguage] = {
