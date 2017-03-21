@@ -25,19 +25,34 @@ object DetectLanguage extends Module with ParquetExtensions[Sentence] {
     * @param sparkSession spark session
     * @return
     */
-  def calc(textDS: Dataset[String], sample: Boolean = true)(implicit sparkSession: SparkSession): Dataset[Sentence] = {
+  def calc(textDS: Dataset[String])(implicit sparkSession: SparkSession): Dataset[Sentence] = {
     import sparkSession.implicits._
     sparkSession.sparkContext.setJobGroup(this.getClass.getName, this.getClass.getName)
 
     sparkSession.sparkContext.setJobDescription("Detect the language of the text")
-    (if(sample)textDS.sample(withReplacement = true, 0.0005) else textDS)
+    textDS
+      .repartition(Utils.getDefaultNumPartitions)
+
+    // TASK 1:
+    //  - split up the lines of the textDS dataset into separate parts - see datasets/sentences.tsv for the formatting (it also contains the actual language of the text that we want to use later to verify the detected language)
+    //  - use the LanguageDetector() to translate the sentence and store the results in the Sentence case class
+
+    // when finished coding:
+    // - package, deploy and submit the spark application and verify the results using spark shell or a notebook (see https://github.com/tolomaus/languagedetector section Quick start - usage)
+    // - verify the logs of the executed module in the language detector UI
+
+    // solution:
+    textDS
+      .repartition(Utils.getDefaultNumPartitions)
       .map(line => line.split("\t"))
       .mapPartitions { sentences =>
-        sentences.map { case Array(id, language, sentence) =>
-          val languageDetector = new LanguageDetector()
+        val languageDetector = new LanguageDetector()
+
+        sentences.map { case Array(sentence, language) =>
           Sentence(sentence, language, languageDetector.detectLanguage(sentence))
         }
       }
+
   }
 
   def loadInputTextFromFile(path: String)(implicit sparkSession: SparkSession): Dataset[String] = {

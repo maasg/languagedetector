@@ -26,6 +26,14 @@ object CountSentencesByLanguage extends Module with ParquetExtensions[SentenceCo
     sparkSession.sparkContext.setJobGroup(this.getClass.getName, this.getClass.getName)
 
     sparkSession.sparkContext.setJobDescription("Count the sentences by language")
+
+    // TASK 2: count how many sentences exist for each detected language and save the results in the SentenceCountByLanguage case class
+
+    // when finished coding:
+    // - package, deploy and submit the spark application and verify the results using spark shell or a notebook (see https://github.com/tolomaus/languagedetector section Quick start - usage)
+    // - verify the logs of the executed module in the language detector UI
+
+    // solution:
     sentenceDS
       .groupByKey(_.detectedLanguage)
       .count

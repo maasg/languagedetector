@@ -1,10 +1,13 @@
 name := "languagedetector"
 
+organization := "tolomaus"
+
 version := "1.0"
-val build = "need new build"
 
 scalaVersion := "2.11.8"
 val sparkVersion = "2.1.0"
+
+conflictManager := ConflictManager.latestRevision
 
 //spark
 libraryDependencies += "org.apache.spark" %% "spark-core" % sparkVersion % Provided
@@ -32,9 +35,11 @@ libraryDependencies += "org.scalaj" %% "scalaj-http" % "2.3.0"
 
 libraryDependencies += "org.reflections" % "reflections" % "0.9.10"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % Test // weird vtable issue when using 3.0.1 (2.2.6 seems to be also secretly loaded by intellij which causes a version conflict in BeforeAndAfterAll)
 
-javaOptions in Test += "-Dconfig.resource=test.conf"
+fork in test := true // allow to pass the javaOptions to sbt test
+
+javaOptions in Test += "-Dconfig.resource=unit_test.conf"
 
 parallelExecution in test := false // parallel execution doesnt work with spark contexts (one per jvm)
 

@@ -7,6 +7,7 @@ object Workflow extends WorkflowBase {
     (Array()
       :+ DetectLanguage
       :+ CountSentencesByLanguage
+      :+ CountWrongDetectionsByLanguage
       )
   }
 }

@@ -8,14 +8,14 @@ class DetectLanguageSpec extends UnitWithSparkSpec {
     import sqlC.implicits._
 
     val textDS = Seq(
-      "1\tnl\tDit is een Nederlandstalige tekst",
-      "2\ten\tAnd this is a text written in English",
-      "3\tfr\tPar conte, ça c'est un texte ecrit en Français"
+      "nl\tDit is een Nederlandstalige tekst",
+      "en\tAnd this is a text written in English",
+      "fr\tPar contre, ça c'est une texte ecrit en Français"
     ).toDS
 
-    val sentences = DetectLanguage.calc(textDS, sample = false).collect
+    val sentences = DetectLanguage.calc(textDS).collect
 
     sentences should have length 3
-    sentences.foreach(sentence => sentence.detectedLanguage should be(sentence.language))
+    sentences.foreach(sentence => sentence.detectedLanguage should be(sentence.actualLanguage))
   }
 }

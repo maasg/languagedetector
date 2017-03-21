@@ -11,7 +11,11 @@ import org.rogach.scallop.Scallop
 import org.slf4j.{Logger, LoggerFactory}
 
 trait Module {
-  protected val logger: Logger = LoggerFactory.getLogger(this.getClass)
+  protected val logger: Logger = {
+    Utils.setBusLogFileNamePropertyIfEmpty()
+    LoggerFactory.getLogger(this.getClass)
+  }
+
   protected implicit val module: Class[_ <: Module] = this.getClass
 
   def main(args: Array[String]): Unit = {
@@ -45,9 +49,15 @@ abstract class StreamingModule(sparkPort: Int) {
 }
 
 trait ParquetExtensions[T] {
+  private val logger = LoggerFactory.getLogger(this.getClass)
+
   val parquetFile: String
 
   def saveResultsToParquet(ds: Dataset[T])(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Unit = {
+    saveResultsToParquetAsDF(ds.toDF)
+  }
+
+  def saveResultsToParquetAsDF(df: DataFrame)(implicit module: Class[_] = this.getClass, sparkSession: SparkSession): Unit = {
     val parquetFileTemp = parquetFile + ".inprogress"
 
     if (Utils.existsParquetFile(parquetFileTemp))
@@ -55,7 +65,7 @@ trait ParquetExtensions[T] {
 
     logger.debug(s"Saving $parquetFile to a temporary parquet file $parquetFileTemp...")
     try {
-      Utils.saveAsParquetFile(ds, parquetFileTemp)
+      Utils.saveAsParquetFile(df, parquetFileTemp)
     } catch {
       case e: Exception =>
         logger.error(s"An error occurred while saving the temporary parquet file, leaving the original parquet file $parquetFile untouched.")
@@ -118,6 +128,4 @@ trait ParquetExtensions[T] {
           None
       }
   }
-
-  private val logger = LoggerFactory.getLogger(this.getClass)
 }
